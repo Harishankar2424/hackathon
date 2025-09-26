@@ -4,9 +4,11 @@
 import { app } from "./firebase";
 import { getAuth, GoogleAuthProvider, signInWithPopup, User } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 export function useAuth() {
   const router = useRouter();
+  const { toast } = useToast();
 
   const signInWithGoogle = async (role: 'vendor' | 'distributor') => {
     const auth = getAuth(app);
@@ -33,11 +35,12 @@ export function useAuth() {
       // Handle Errors here.
       const errorCode = error.code;
       const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.customData?.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      console.error({ errorCode, errorMessage, email, credential });
+      console.error(`Authentication Error (${errorCode}): ${errorMessage}`);
+      toast({
+        title: "Authentication Failed",
+        description: "Could not sign in with Google. Please try again.",
+        variant: "destructive",
+      })
     }
   };
 
