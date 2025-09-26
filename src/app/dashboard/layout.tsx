@@ -1,9 +1,6 @@
-import React from "react";
-import Link from "next/link";
-import {
-  Search,
-  Sprout,
-} from "lucide-react";
+import React from 'react';
+import Link from 'next/link';
+import {Search, Sprout} from 'lucide-react';
 
 import {
   SidebarProvider,
@@ -12,11 +9,11 @@ import {
   SidebarContent,
   SidebarTrigger,
   SidebarInset,
-} from "@/components/ui/sidebar";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { UserNav } from "@/components/dashboard/UserNav";
-import { DashboardNav } from "@/components/dashboard/DashboardNav";
+} from '@/components/ui/sidebar';
+import {Input} from '@/components/ui/input';
+import {Button} from '@/components/ui/button';
+import {UserNav} from '@/components/dashboard/UserNav';
+import {DashboardNav} from '@/components/dashboard/DashboardNav';
 
 export default function DashboardLayout({
   children,
@@ -27,16 +24,18 @@ export default function DashboardLayout({
     <SidebarProvider>
       <div className="min-h-screen">
         <Sidebar>
-          <SidebarContent className="p-0">
-             <SidebarHeader className="border-b">
-                 <div className="flex items-center gap-2 font-bold text-lg font-headline">
-                    <Sprout className="h-6 w-6 text-primary" />
-                    <span className="group-data-[collapsible=icon]:hidden">SynergyChain</span>
-                 </div>
-              </SidebarHeader>
-              <div className="flex flex-col h-full">
-                <DashboardNav />
+          <SidebarContent className="p-0 flex flex-col">
+            <SidebarHeader className="border-b">
+              <div className="flex items-center gap-2 font-bold text-lg font-headline">
+                <Sprout className="h-6 w-6 text-primary" />
+                <span className="group-data-[collapsible=icon]:hidden">
+                  SynergyChain
+                </span>
               </div>
+            </SidebarHeader>
+            <div className="flex-1 overflow-y-auto">
+              <DashboardNav />
+            </div>
           </SidebarContent>
         </Sidebar>
         <SidebarInset>
