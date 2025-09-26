@@ -120,3 +120,17 @@ export const mockPerformanceData = [
   { name: 'Maria Garcia', 'courses-completed': 7, 'average-score': 95 },
   { name: 'David Lee', 'courses-completed': 4, 'average-score': 81 },
 ];
+
+export const mockTrainingCourses = [
+  { id: "course_1", title: "Z-Phone Sales Training", assignedBy: "Global Tech Inc.", status: "Completed", score: 95, progress: 100 },
+  { id: "course_2", title: "Advanced Negotiation", assignedBy: "Global Tech Inc.", status: "In Progress", score: null, progress: 60 },
+  { id: "course_3", title: "InnovateHub Technical Intro", assignedBy: "Innovate Solutions", status: "Not Started", score: null, progress: 0 },
+  { id: "course_4", title: "EU Market Compliance", assignedBy: "Innovate Solutions", status: "Not Started", score: null, progress: 0 },
+  { id: "course_5", title: "Logistics Management 101", assignedBy: "SynergyChain", status: "Completed", score: 88, progress: 100 },
+]
+
+export const distributorCourses = {
+  "dist_1": ["course_1", "course_2", "course_5"], // John Doe
+  "dist_2": ["course_3", "course_4"], // Jane Smith
+  "dist_3": [], // Kenji Tanaka
+}
