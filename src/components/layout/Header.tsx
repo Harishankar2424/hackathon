@@ -1,0 +1,60 @@
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu, Sprout } from "lucide-react";
+
+const Logo = () => (
+  <Link href="/" className="flex items-center gap-2 font-bold text-lg font-headline">
+    <Sprout className="h-6 w-6 text-primary" />
+    SynergyChain
+  </Link>
+);
+
+export default function Header() {
+  return (
+    <header className="px-4 lg:px-6 h-14 flex items-center bg-card border-b">
+      <Logo />
+      <nav className="ml-auto hidden gap-4 sm:gap-6 lg:flex">
+        <Link href="/#features" className="text-sm font-medium hover:underline underline-offset-4">
+          Features
+        </Link>
+        <Link href="/dashboard" className="text-sm font-medium hover:underline underline-offset-4">
+          Dashboard
+        </Link>
+        <Link href="/auth/login" className="text-sm font-medium hover:underline underline-offset-4">
+          Login
+        </Link>
+        <Link href="/auth/signup/distributor">
+          <Button>Get Started</Button>
+        </Link>
+      </nav>
+      <div className="ml-auto lg:hidden">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon">
+              <Menu className="h-6 w-6" />
+              <span className="sr-only">Toggle navigation menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right">
+            <div className="flex flex-col gap-4 p-4">
+              <Logo />
+              <Link href="/#features" className="text-sm font-medium hover:underline underline-offset-4">
+                Features
+              </Link>
+              <Link href="/dashboard" className="text-sm font-medium hover:underline underline-offset-4">
+                  Dashboard
+              </Link>
+              <Link href="/auth/login" className="text-sm font-medium hover:underline underline-offset-4">
+                Login
+              </Link>
+              <Link href="/auth/signup/distributor">
+                <Button className="w-full">Get Started</Button>
+              </Link>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </header>
+  );
+}
