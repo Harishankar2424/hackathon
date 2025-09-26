@@ -15,6 +15,7 @@ import {
   Users,
   Briefcase,
   FilePlus,
+  BarChart,
 } from "lucide-react";
 
 const vendorNav = [
@@ -33,6 +34,11 @@ const vendorNav = [
     label: "Applicants",
     icon: <Users />,
   },
+  {
+    href: "/dashboard/vendor/reports",
+    label: "Reports",
+    icon: <BarChart />,
+  }
 ];
 
 const distributorNav = [
