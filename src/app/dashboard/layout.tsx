@@ -26,7 +26,7 @@ export default function DashboardLayout({
   return (
     <SidebarProvider>
       <div className="min-h-screen">
-        <Sidebar side="right">
+        <Sidebar>
           <SidebarContent className="p-0">
              <SidebarHeader className="border-b">
                  <div className="flex items-center gap-2 font-bold text-lg font-headline">
