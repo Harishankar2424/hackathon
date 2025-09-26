@@ -75,7 +75,7 @@ export const mockContracts = [
     status: "Open",
     details: `This agreement provides exclusive rights to market and sell InnovateHub Software across the European Union. There are no minimum sales requirements for the first year, but a target of 5,000 licenses in the second year. Payment is due within 60 days of invoice. The agreement is for 3 years and will auto-renew unless terminated with 90 days' notice. A non-compete clause prevents the distribution of similar project management software.`,
      summary: {
-      "Exclusive/Non-Exclusive Rights": "Exclusive",
+      "Exclusive/Non-Exclusive. Rights": "Exclusive",
       "Territory & Sales Scope": "European Union for InnovateHub Software",
       "Pricing & Payment Terms": "NET 60",
       "Minimum Sales or Purchase Requirements": "5,000 licenses in Year 2",
@@ -112,3 +112,11 @@ export const mockApplicants = [
         companyDatabase: "Internal sales data indicates strong demand for premium smartphones in the NA region, especially on the West Coast."
     }
 ]
+
+export const mockPerformanceData = [
+  { name: 'John Doe', 'courses-completed': 5, 'average-score': 88 },
+  { name: 'Jane Smith', 'courses-completed': 8, 'average-score': 92 },
+  { name: 'Kenji Tanaka', 'courses-completed': 6, 'average-score': 85 },
+  { name: 'Maria Garcia', 'courses-completed': 7, 'average-score': 95 },
+  { name: 'David Lee', 'courses-completed': 4, 'average-score': 81 },
+];

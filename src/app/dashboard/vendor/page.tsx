@@ -6,8 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { FilePlus, Users, CheckSquare } from "lucide-react"
+import { FilePlus, Users, CheckSquare, BookOpen } from "lucide-react"
 import Link from "next/link"
+import PerformanceReport from "@/components/dashboard/PerformanceReport";
+import { mockPerformanceData } from "@/lib/mock-data";
+
 
 const stats = [
     { title: "Open Contracts", value: "2", icon: <FilePlus className="h-4 w-4 text-muted-foreground" />, change: "+1 from last month" },
@@ -47,16 +50,20 @@ export default function VendorDashboard() {
             </Card>
         ))}
       </div>
-      <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm min-h-[400px]">
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h3 className="text-2xl font-bold tracking-tight font-headline">
-            Welcome, Vendor!
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            Manage your contracts and find the best distributors for your products.
-          </p>
-        </div>
-      </div>
+        <Card>
+            <CardHeader>
+                <CardTitle className="font-headline text-2xl flex items-center gap-2">
+                    <BookOpen className="h-6 w-6" />
+                    Distributor Training Performance
+                </CardTitle>
+                <CardDescription>
+                    Review of distributor progress and scores in assigned training sessions.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <PerformanceReport data={mockPerformanceData} />
+            </CardContent>
+        </Card>
     </div>
   )
 }
