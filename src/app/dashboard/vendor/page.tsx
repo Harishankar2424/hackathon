@@ -17,7 +17,7 @@ const stats = [
 
 export default function VendorDashboard() {
   return (
-    <>
+    <div className="grid gap-4">
       <div className="flex items-center">
         <h1 className="text-lg font-semibold md:text-2xl font-headline">Vendor Dashboard</h1>
         <div className="ml-auto">
@@ -47,7 +47,7 @@ export default function VendorDashboard() {
             </Card>
         ))}
       </div>
-      <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
+      <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm min-h-[400px]">
         <div className="flex flex-col items-center gap-1 text-center">
           <h3 className="text-2xl font-bold tracking-tight font-headline">
             Welcome, Vendor!
@@ -57,6 +57,6 @@ export default function VendorDashboard() {
           </p>
         </div>
       </div>
-    </>
+    </div>
   )
 }
