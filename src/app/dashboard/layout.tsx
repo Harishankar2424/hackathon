@@ -22,7 +22,7 @@ export default function DashboardLayout({
 }) {
   return (
     <SidebarProvider>
-      <div className="min-h-screen">
+      <div className="min-h-screen w-full flex">
         <Sidebar>
           <SidebarContent className="p-0 flex flex-col">
             <SidebarHeader className="border-b">
@@ -38,18 +38,18 @@ export default function DashboardLayout({
             </div>
           </SidebarContent>
         </Sidebar>
-        <SidebarInset>
-          <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
+        <div className="flex flex-col w-full">
+          <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-card px-4 sm:h-[60px] sm:px-6">
             <SidebarTrigger className="md:hidden" />
             <div className="w-full flex-1">
               {/* Can add a search form here if needed */}
             </div>
             <UserNav />
           </header>
-          <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+          <main className="flex-1 overflow-y-auto p-4 lg:p-6 lg:gap-6 gap-4">
             {children}
           </main>
-        </SidebarInset>
+        </div>
       </div>
     </SidebarProvider>
   );
