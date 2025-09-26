@@ -5,7 +5,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Briefcase, FileText, CheckCircle } from "lucide-react"
+import { Briefcase, FileText, CheckCircle, BookOpen } from "lucide-react"
+import Link from "next/link";
+import PerformanceReport from "@/components/dashboard/PerformanceReport";
+import { mockPerformanceData } from "@/lib/mock-data";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+
 
 const stats = [
     { title: "Active Offers", value: "2", icon: <Briefcase className="h-4 w-4 text-muted-foreground" /> },
@@ -14,6 +20,8 @@ const stats = [
 ]
 
 export default function DistributorDashboard() {
+  const myPerformance = mockPerformanceData.filter(d => d.name === "John Doe");
+  
   return (
     <div className="grid gap-4">
       <div className="flex items-center">
@@ -37,14 +45,33 @@ export default function DistributorDashboard() {
             </Card>
         ))}
       </div>
-      <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm min-h-[400px]">
+       <Card>
+          <CardHeader>
+              <CardTitle className="font-headline text-2xl flex items-center gap-2">
+                  <BookOpen className="h-6 w-6" />
+                  My Training Progress
+              </CardTitle>
+              <CardDescription>
+                  Your progress in assigned training sessions. Keep it up!
+              </CardDescription>
+          </CardHeader>
+          <CardContent className="h-80">
+              <PerformanceReport data={myPerformance} />
+          </CardContent>
+      </Card>
+      <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm min-h-[200px]">
         <div className="flex flex-col items-center gap-1 text-center">
           <h3 className="text-2xl font-bold tracking-tight font-headline">
-            Welcome, Distributor!
+            Welcome, John!
           </h3>
           <p className="text-sm text-muted-foreground">
             Explore contract offers and manage your partnerships here.
           </p>
+          <Link href="/dashboard/distributor/offers">
+            <Button variant="outline" className="mt-4">
+                View Contract Offers <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

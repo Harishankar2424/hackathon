@@ -16,6 +16,7 @@ import {
   Briefcase,
   FilePlus,
   BarChart,
+  BookOpen,
 } from "lucide-react";
 
 const vendorNav = [
@@ -57,6 +58,11 @@ const distributorNav = [
     label: "My Contracts",
     icon: <FileText />,
   },
+  {
+    href: "/dashboard/distributor/training",
+    label: "Training Sessions",
+    icon: <BookOpen />,
+  }
 ];
 
 export function DashboardNav() {
