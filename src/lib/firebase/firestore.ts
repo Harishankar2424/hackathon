@@ -30,7 +30,7 @@ export async function addDistributor(userId: string, data: DistributorData) {
 
 
 export async function getContracts(): Promise<Contract[]> {
-    const contractsCol = collection(db, 'contracts');
+    const contractsCol = collection(db, 'active_offers');
     const contractSnapshot = await getDocs(contractsCol);
     const contractList = contractSnapshot.docs.map(doc => {
         const data = doc.data();
@@ -48,3 +48,4 @@ export async function getContracts(): Promise<Contract[]> {
     });
     return contractList;
 }
+
