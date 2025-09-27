@@ -2,13 +2,42 @@
 "use client";
 
 import { app } from "./firebase";
-import { getAuth, GoogleAuthProvider, signInWithPopup, User } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, User, createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { addDistributor, type DistributorData } from "./firebase/firestore";
 
 export function useAuth() {
   const router = useRouter();
   const { toast } = useToast();
+
+  const signUpWithEmail = async (data: DistributorData & {password: string}) => {
+    const auth = getAuth(app);
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+        const user = userCredential.user;
+        
+        await addDistributor(user.uid, data);
+
+        toast({
+            title: "Account Created!",
+            description: "You have successfully signed up."
+        });
+
+        router.push("/dashboard/distributor");
+
+    } catch(error: any) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        console.error(`Authentication Error (${errorCode}): ${errorMessage}`);
+        toast({
+            title: "Sign Up Failed",
+            description: "Could not create your account. Please try again.",
+            variant: "destructive",
+        })
+    }
+  }
 
   const signInWithGoogle = async (role: 'vendor' | 'distributor') => {
     const auth = getAuth(app);
@@ -51,5 +80,5 @@ export function useAuth() {
     }
   };
 
-  return { signInWithGoogle };
+  return { signInWithGoogle, signUpWithEmail };
 }

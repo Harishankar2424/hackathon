@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
@@ -37,7 +36,7 @@ const formSchema = z.object({
 
 
 export default function DistributorSignupPage() {
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, signUpWithEmail } = useAuth();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -52,14 +51,8 @@ export default function DistributorSignupPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // Here you would typically handle form submission, e.g., call a Firebase function to create a user.
-    toast({
-        title: "Account Created!",
-        description: "You have successfully signed up."
-    })
-    // For now, we just log and show a toast.
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    await signUpWithEmail(values);
   }
 
   return (
@@ -179,8 +172,8 @@ export default function DistributorSignupPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
-                Create an account
+              <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+                 {form.formState.isSubmitting ? "Creating Account..." : "Create an account"}
               </Button>
             </form>
           </Form>
