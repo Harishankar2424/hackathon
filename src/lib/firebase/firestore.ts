@@ -4,6 +4,7 @@ import { app } from "@/lib/firebase";
 import { getFirestore, collection, getDocs, setDoc, doc, addDoc, getDoc, where, query, updateDoc } from "firebase/firestore";
 import type { Contract } from '@/lib/types';
 import { z } from "zod";
+import { mockTrainingCourses } from "../mock-data";
 
 const db = getFirestore(app);
 
@@ -248,5 +249,33 @@ export async function updateApplicationStatus(id: string, status: "Approved" | "
     } catch (error) {
         console.error("Error updating application status: ", error);
         throw new Error("Failed to update application status.");
+    }
+}
+
+// Training Functions
+export async function assignInitialTraining(distributorId: string) {
+    try {
+        const trainingRef = doc(db, "distributor_courses", distributorId);
+        // Assign some default courses upon approval
+        await setDoc(trainingRef, {
+            courseIds: ["course_1", "course_2", "course_5"]
+        });
+    } catch (error) {
+        console.error("Error assigning initial training: ", error);
+        throw new Error("Failed to assign training courses.");
+    }
+}
+
+export async function getAssignedCourses(distributorId: string): Promise<string[]> {
+    try {
+        const trainingRef = doc(db, "distributor_courses", distributorId);
+        const docSnap = await getDoc(trainingRef);
+        if (docSnap.exists()) {
+            return docSnap.data().courseIds || [];
+        }
+        return [];
+    } catch (error) {
+        console.error("Error fetching assigned courses: ", error);
+        return [];
     }
 }

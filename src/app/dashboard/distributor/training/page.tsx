@@ -1,15 +1,36 @@
+
+'use client';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import PerformanceReport from "@/components/dashboard/PerformanceReport";
-import { mockPerformanceData, mockTrainingCourses, distributorCourses } from "@/lib/mock-data";
-import { BookOpen, CheckCircle, CircleDotDashed, Circle } from "lucide-react";
+import { mockPerformanceData, mockTrainingCourses } from "@/lib/mock-data";
+import { BookOpen, CheckCircle, CircleDotDashed, Circle, Loader2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/lib/auth";
+import { useEffect, useState } from "react";
+import { getAssignedCourses } from "@/lib/firebase/firestore";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function TrainingPage() {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [assignedCourses, setAssignedCourses] = useState<typeof mockTrainingCourses>([]);
+
   const myPerformance = mockPerformanceData.filter(d => d.name === "Lakshan");
-  const myCourseIds = distributorCourses['dist_1'] || [];
-  const myCourses = mockTrainingCourses.filter(course => myCourseIds.includes(course.id));
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchCourses = async () => {
+      setLoading(true);
+      const courseIds = await getAssignedCourses(user.uid);
+      const myCourses = mockTrainingCourses.filter(course => courseIds.includes(course.id));
+      setAssignedCourses(myCourses);
+      setLoading(false);
+    }
+    fetchCourses();
+  }, [user]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -35,6 +56,13 @@ export default function TrainingPage() {
             <CardDescription>Your assigned training courses and current progress.</CardDescription>
         </CardHeader>
         <CardContent>
+          {loading ? (
+             <div className="space-y-3">
+                {[...Array(3)].map((_, i) => (
+                    <Skeleton key={i} className="h-12 w-full" />
+                ))}
+            </div>
+          ) : (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -46,7 +74,7 @@ export default function TrainingPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {myCourses.length > 0 ? myCourses.map(course => (
+                {assignedCourses.length > 0 ? assignedCourses.map(course => (
                   <TableRow key={course.id}>
                     <TableCell className="font-medium">{course.title}</TableCell>
                     <TableCell>{course.assignedBy}</TableCell>
@@ -74,6 +102,7 @@ export default function TrainingPage() {
                 )}
               </TableBody>
             </Table>
+          )}
         </CardContent>
       </Card>
       <Card>

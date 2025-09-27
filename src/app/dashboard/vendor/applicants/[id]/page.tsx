@@ -139,8 +139,10 @@ export default function ApplicantDetailPage({ params }: { params: { id: string }
                 </CardContent>
             </Card>
             <OnboardingAutomator 
+                applicantId={applicant.id}
                 applicantName={applicant.distributorName}
                 applicantEmail={distributor.email}
+                distributorId={applicant.distributorId}
                 contractTitle={applicant.contractTitle}
                 onStatusChange={handleStatusChange}
                 currentStatus={applicant.status}

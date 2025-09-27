@@ -7,16 +7,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, XCircle, Loader2, Send } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { assignInitialTraining } from "@/lib/firebase/firestore";
 
 interface OnboardingAutomatorProps {
+    applicantId: string;
     applicantName: string;
     applicantEmail: string;
+    distributorId: string;
     contractTitle: string;
     onStatusChange: (newStatus: "Approved" | "Rejected") => void;
     currentStatus: "Pending" | "Approved" | "Rejected";
 }
 
-export default function OnboardingAutomator({ applicantName, applicantEmail, contractTitle, onStatusChange, currentStatus }: OnboardingAutomatorProps) {
+export default function OnboardingAutomator({ applicantName, applicantEmail, distributorId, contractTitle, onStatusChange, currentStatus }: OnboardingAutomatorProps) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -24,9 +27,16 @@ export default function OnboardingAutomator({ applicantName, applicantEmail, con
   const handleApprove = async () => {
     setLoading(true);
     setError(null);
-    onStatusChange("Approved");
+    
 
     try {
+      // Step 1: Update the status in the parent component
+      onStatusChange("Approved");
+
+      // Step 2: Assign Training
+      await assignInitialTraining(distributorId);
+
+      // Step 3: Send automated emails (AI Flow)
       const response = await automateOfficialMailAndInvite({
         vendorEmail: "vendor@synergychain.com",
         distributorEmail: applicantEmail,
@@ -35,11 +45,11 @@ export default function OnboardingAutomator({ applicantName, applicantEmail, con
         informationPortalLink: "https://notion.so/synergychain/...",
         trainingSessionDetails: "Assigned 'Z-Phone Sales Training' and 'Advanced Negotiation' courses."
       });
-      setResult(response.message);
+      setResult(response.message + " Training has been assigned.");
     } catch (e) {
       console.error(e);
       setError("Failed to automate onboarding. Please try again.");
-      setResult("The applicant has been approved, but the automated email failed to send. Please contact them manually.");
+      setResult("The applicant has been approved, but the automated onboarding process failed. Please check the logs and contact them manually.");
     } finally {
       setLoading(false);
     }
