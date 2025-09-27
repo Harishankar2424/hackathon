@@ -18,7 +18,6 @@ import {
   FilePlus,
   BarChart,
   BookOpen,
-  User,
 } from "lucide-react";
 
 const vendorNav = [
@@ -26,11 +25,6 @@ const vendorNav = [
     href: "/dashboard/vendor",
     label: "Home",
     icon: <Home />,
-  },
-   {
-    href: "/dashboard/vendor/profile",
-    label: "Profile",
-    icon: <User />,
   },
   {
     href: "/dashboard/vendor/contracts/new",
@@ -54,11 +48,6 @@ const distributorNav = [
     href: "/dashboard/distributor",
     label: "Home",
     icon: <Home />,
-  },
-  {
-    href: "/dashboard/distributor/profile",
-    label: "Profile",
-    icon: <User />,
   },
   {
     href: "/dashboard/distributor/offers",
