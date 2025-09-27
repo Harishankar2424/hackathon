@@ -13,8 +13,8 @@ import OnboardingAutomator from "@/components/ai/OnboardingAutomator";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 
-export default function ApplicantDetailPage({ params }: { params: { id: string } }) {
-  const applicantData = mockApplicants.find(a => a.id === params.id);
+export default function ApplicantDetailPage({ params: { id } }: { params: { id: string } }) {
+  const applicantData = mockApplicants.find(a => a.id === id);
   const avatar = placeholderImages.find(p => p.id === 'distributor-avatar');
   
   const [applicant, setApplicant] = useState(applicantData);
