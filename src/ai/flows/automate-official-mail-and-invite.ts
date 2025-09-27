@@ -34,7 +34,6 @@ const prompt = ai.definePrompt({
   name: 'automateOfficialMailAndInvitePrompt',
   input: {schema: AutomateOfficialMailAndInviteInputSchema},
   output: {schema: AutomateOfficialMailAndInviteOutputSchema},
-  model: 'googleai/gemini-2.5-pro',
   prompt: `You are an AI assistant tasked with automating the onboarding process after a vendor and distributor have signed a contract.
 
   Your task is to act as the platform (SynergyChain) and send welcoming, professional, and informative emails to both the vendor and the distributor.

@@ -37,7 +37,6 @@ const summarizeContractPrompt = ai.definePrompt({
   name: 'summarizeContractPrompt',
   input: {schema: SummarizeContractInputSchema},
   output: {schema: SummarizeContractOutputSchema},
-  model: 'googleai/gemini-2.5-pro',
   prompt: `You are an expert AI legal assistant specializing in B2B distribution agreements. Your task is to help potential distributors quickly understand the key terms of a contract offer by summarizing the contract details.
 
   Analyze the following contract text and perform two tasks:
