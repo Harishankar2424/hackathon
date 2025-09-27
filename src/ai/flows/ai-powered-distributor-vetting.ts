@@ -49,7 +49,6 @@ const prompt = ai.definePrompt({
   name: 'aiPoweredDistributorVettingPrompt',
   input: {schema: AIPoweredDistributorVettingInputSchema},
   output: {schema: AIPoweredDistributorVettingOutputSchema},
-  model: 'gemini-2.5-pro',
   prompt: `You are an AI agent specializing in vetting distributors for vendors.
 
 You will analyze the distributor details, cross-reference them with the product information, and provide suggested options for the vendor.

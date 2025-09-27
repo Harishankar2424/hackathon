@@ -6,7 +6,7 @@ export const ai = genkit({
   plugins: [
     googleAI({
       // Use the full model name string for the default model
-      model: 'googleai/gemini-2.5-pro',
+      model: 'googleai/gemini-2.5-flash',
     }),
     next(),
   ],

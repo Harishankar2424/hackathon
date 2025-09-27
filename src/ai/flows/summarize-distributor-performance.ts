@@ -42,7 +42,6 @@ const prompt = ai.definePrompt({
   name: 'summarizeDistributorPerformancePrompt',
   input: {schema: SummarizeDistributorPerformanceInputSchema},
   output: {schema: SummarizeDistributorPerformanceOutputSchema},
-  model: 'gemini-2.5-pro',
   prompt: `You are an expert performance analyst for a B2B supply chain platform.
 
 Your task is to analyze the provided training performance data for a distributor and write a brief, insightful summary. The summary should be about 2-3 sentences long.
