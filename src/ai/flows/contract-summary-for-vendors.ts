@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -36,7 +37,7 @@ const summarizeContractPrompt = ai.definePrompt({
   name: 'summarizeContractPrompt',
   input: {schema: SummarizeContractInputSchema},
   output: {schema: SummarizeContractOutputSchema},
-  prompt: `You are an expert AI legal assistant specializing in B2B distribution agreements. Your task is to help potential distributors quickly understand the key terms of a contract offer.
+  prompt: `You are an expert AI legal assistant specializing in B2B distribution agreements. Your task is to help potential distributors quickly understand the key terms of a contract offer by summarizing the contract details.
 
   Analyze the following contract text and perform two tasks:
   1.  **Write a Summary:** Create a clear and concise summary (3-4 sentences) that explains the core purpose and most important obligations or benefits for the distributor.
@@ -44,20 +45,6 @@ const summarizeContractPrompt = ai.definePrompt({
 
   **Contract Text:**
   {{{contractText}}}
-
-  **Summary:**
-  [Your summary here]
-
-  **Key Statistics (Markdown Table):**
-  | Aspect | Details |
-  | --- | --- |
-  | Exclusive/Non-Exclusive Rights | |
-  | Territory & Sales Scope | |
-  | Pricing & Payment Terms | |
-  | Minimum Sales or Purchase Requirements | |
-  | Intellectual Property & Brand Use | |
-  | Term, Renewal & Termination | |
-  | Confidentiality & Non-Compete | |
   `,
 });
 
