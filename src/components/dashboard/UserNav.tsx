@@ -13,13 +13,14 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
+import { UserSettings } from "./UserSettings"
 
 export function UserNav() {
   return (
+    <>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -43,9 +44,7 @@ export function UserNav() {
           <DropdownMenuItem>
             Profile
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            Settings
-          </DropdownMenuItem>
+          <UserSettings />
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <Link href="/">
@@ -55,5 +54,6 @@ export function UserNav() {
         </Link>
       </DropdownMenuContent>
     </DropdownMenu>
+    </>
   )
 }
