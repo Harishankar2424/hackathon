@@ -2,14 +2,42 @@
 "use client";
 
 import { app } from "./firebase";
-import { getAuth, GoogleAuthProvider, signInWithPopup, User, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, User, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { addDistributor, type DistributorData, addVendor, type VendorData, getUserRole } from "./firebase/firestore";
+import { addDistributor, type DistributorData, addVendor, type VendorData, getUserRole, getDistributorData, getVendorData } from "./firebase/firestore";
+import { useEffect, useState } from "react";
 
 export function useAuth() {
   const router = useRouter();
   const { toast } = useToast();
+  const [user, setUser] = useState<User | null>(null);
+  const [userData, setUserData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const auth = getAuth(app);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setLoading(true);
+      if (user) {
+        setUser(user);
+        const role = await getUserRole(user.uid);
+        if (role === 'distributor') {
+          const data = await getDistributorData(user.uid);
+          setUserData(data);
+        } else if (role === 'vendor') {
+          const data = await getVendorData(user.uid);
+          setUserData(data);
+        }
+      } else {
+        setUser(null);
+        setUserData(null);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const signUpWithEmail = async (data: DistributorData & {password: string}) => {
     const auth = getAuth(app);
@@ -158,5 +186,5 @@ export function useAuth() {
     }
   };
 
-  return { signInWithGoogle, signUpWithEmail, vendorSignUp, signInWithEmail };
+  return { user, userData, loading, signInWithGoogle, signUpWithEmail, vendorSignUp, signInWithEmail };
 }

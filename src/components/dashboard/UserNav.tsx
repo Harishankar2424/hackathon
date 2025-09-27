@@ -1,3 +1,4 @@
+
 "use client"
 
 import {
@@ -17,33 +18,46 @@ import {
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
 import { UserSettings } from "./UserSettings"
+import { useAuth } from "@/lib/auth"
+import { usePathname } from "next/navigation"
 
 export function UserNav() {
+  const { user, userData } = useAuth();
+  const pathname = usePathname();
+
+  const getProfileLink = () => {
+    if(pathname.startsWith('/dashboard/vendor')) return "/dashboard/vendor/profile";
+    if(pathname.startsWith('/dashboard/distributor')) return "/dashboard/distributor/profile";
+    return "/dashboard";
+  }
+
   return (
     <>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="https://picsum.photos/seed/user-avatar/100/100" alt="@user" />
-            <AvatarFallback>U</AvatarFallback>
+            <AvatarImage src={user?.photoURL || undefined} alt="@user" />
+            <AvatarFallback>{userData?.firstName?.charAt(0) || userData?.companyName?.charAt(0) || 'U'}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">User</p>
+            <p className="text-sm font-medium leading-none">{userData?.companyName || `${userData?.firstName} ${userData?.lastName}`}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              user@example.com
+              {user?.email}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Profile
-          </DropdownMenuItem>
+          <Link href={getProfileLink()}>
+            <DropdownMenuItem>
+              Profile
+            </DropdownMenuItem>
+          </Link>
           <UserSettings />
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

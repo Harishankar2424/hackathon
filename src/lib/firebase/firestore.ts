@@ -29,6 +29,15 @@ export async function addDistributor(userId: string, data: DistributorData) {
     }
 }
 
+export async function getDistributorData(userId: string): Promise<DistributorData | null> {
+    const docRef = doc(db, "distributors", userId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        return docSnap.data() as DistributorData;
+    }
+    return null;
+}
+
 // Vendor Schemas and Functions
 export const vendorFormSchema = z.object({
   companyName: z.string().min(1, 'Company name is required'),
@@ -48,6 +57,16 @@ export async function addVendor(userId: string, data: VendorData) {
         throw new Error("Failed to save vendor information.");
     }
 }
+
+export async function getVendorData(userId: string): Promise<VendorData | null> {
+    const docRef = doc(db, "vendors", userId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        return docSnap.data() as VendorData;
+    }
+    return null;
+}
+
 
 // User Role check
 export async function getUserRole(userId: string): Promise<string | null> {
