@@ -3,8 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { mockApplicants, mockDistributors } from "@/lib/mock-data";
-import { ArrowLeft, CheckCircle, FileText, Send } from "lucide-react";
+import { ArrowLeft, Send } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { placeholderImages } from "@/lib/placeholder-images";
@@ -12,7 +11,7 @@ import ContractSummarizer from "@/components/ai/ContractSummarizer";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
-import { getContract } from "@/lib/firebase/firestore";
+import { getContract, addApplication, getApplicationByContractAndDistributor, type Application } from "@/lib/firebase/firestore";
 import type { Contract } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/lib/auth";
@@ -22,18 +21,25 @@ function OfferDetailClient({ contract }: { contract: Contract }) {
   const contractImage = placeholderImages.find(p => p.id === 'contract-document');
   const { toast } = useToast();
 
-  const currentDistributorId = user?.uid;
-  
-  const [existingApplication, setExistingApplication] = useState(() => 
-    currentDistributorId 
-      ? mockApplicants.find(app => app.contractId === contract.id && app.distributorId === currentDistributorId)
-      : undefined
-  );
-  
-  const [applicationStatus, setApplicationStatus] = useState(existingApplication?.status);
+  const [application, setApplication] = useState<Application | null>(null);
+  const [loadingApplication, setLoadingApplication] = useState(true);
 
-  const handleApply = () => {
-    if (!currentDistributorId || !userData) {
+  useEffect(() => {
+    if (user?.uid) {
+      const fetchApplication = async () => {
+        setLoadingApplication(true);
+        const existingApp = await getApplicationByContractAndDistributor(contract.id, user.uid);
+        setApplication(existingApp);
+        setLoadingApplication(false);
+      };
+      fetchApplication();
+    } else {
+        setLoadingApplication(false);
+    }
+  }, [user, contract.id]);
+
+  const handleApply = async () => {
+    if (!user || !userData) {
         toast({
             title: "Please log in",
             description: "You must be logged in as a distributor to apply.",
@@ -42,9 +48,7 @@ function OfferDetailClient({ contract }: { contract: Contract }) {
         return;
     }
 
-    const alreadyApplied = mockApplicants.some(app => app.contractId === contract.id && app.distributorId === currentDistributorId);
-    
-    if (alreadyApplied) {
+    if (application) {
         toast({
             title: "Already Applied",
             description: "You have already submitted an application for this contract."
@@ -52,27 +56,34 @@ function OfferDetailClient({ contract }: { contract: Contract }) {
         return;
     }
     
-    const newApplication = {
-        id: `app_${mockApplicants.length + 1}`,
-        distributorId: currentDistributorId,
+    const newApplicationData = {
+        distributorId: user.uid,
         distributorName: `${userData.firstName} ${userData.lastName}`,
         contractId: contract.id,
         contractTitle: contract.title,
-        status: "Pending" as "Pending" | "Approved" | "Rejected",
+        status: "Pending" as const,
         date: new Date().toISOString().split('T')[0],
         distributorDetails: `Region: ${userData.region}, Trustworthiness: 85/100, Work History: 5 years experience in tech distribution. Strong sales record in the US and Canada.`,
         productInfo: "Z-Phone is a high-end smartphone targeting professionals and tech enthusiasts.",
         companyDatabase: "Internal sales data indicates strong demand for premium smartphones in the NA region."
     };
 
-    mockApplicants.push(newApplication);
-    setExistingApplication(newApplication);
-    setApplicationStatus("Pending");
-    
-    toast({
-        title: "Application Sent!",
-        description: `Your application for the ${contract.title} has been submitted.`
-    });
+    try {
+        const newAppId = await addApplication(newApplicationData);
+        setApplication({ id: newAppId, ...newApplicationData });
+        
+        toast({
+            title: "Application Sent!",
+            description: `Your application for the ${contract.title} has been submitted.`
+        });
+
+    } catch (error) {
+        toast({
+            title: "Application Failed",
+            description: "Could not submit your application. Please try again.",
+            variant: "destructive"
+        });
+    }
   }
   
   const getStatusBadge = (status: string | undefined) => {
@@ -141,10 +152,10 @@ function OfferDetailClient({ contract }: { contract: Contract }) {
               <CardDescription>Ready to partner with {contract.vendorName}?</CardDescription>
             </CardHeader>
             <CardContent>
-              {applicationStatus ? (
+              {loadingApplication ? <Skeleton className="h-20 w-full" /> : application ? (
                 <div className="flex flex-col items-center justify-center text-center p-4 bg-muted rounded-lg">
                   <p className="font-semibold">Your Application Status:</p>
-                  <div className="mt-2">{getStatusBadge(applicationStatus)}</div>
+                  <div className="mt-2">{getStatusBadge(application.status)}</div>
                   <p className="text-xs text-muted-foreground mt-2">
                     The vendor has been notified. You will be updated on any progress.
                   </p>

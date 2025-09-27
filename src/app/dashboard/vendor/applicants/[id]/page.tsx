@@ -3,36 +3,67 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { mockApplicants, mockDistributors } from "@/lib/mock-data";
-import { ArrowLeft, User, Bot } from "lucide-react";
+import { ArrowLeft, User, Bot, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { placeholderImages } from "@/lib/placeholder-images";
 import DistributorVetting from "@/components/ai/DistributorVetting";
 import OnboardingAutomator from "@/components/ai/OnboardingAutomator";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
+import { getApplication, updateApplicationStatus, getDistributorData, type Application } from "@/lib/firebase/firestore";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { DistributorData } from "@/lib/firebase/firestore";
 
-export default function ApplicantDetailPage({ params: { id } }: { params: { id: string } }) {
-  const applicantData = mockApplicants.find(a => a.id === id);
+export default function ApplicantDetailPage({ params }: { params: { id: string } }) {
+  const [applicant, setApplicant] = useState<Application | null>(null);
+  const [distributor, setDistributor] = useState<DistributorData | null>(null);
+  const [loading, setLoading] = useState(true);
+
   const avatar = placeholderImages.find(p => p.id === 'distributor-avatar');
   
-  const [applicant, setApplicant] = useState(applicantData);
+  useEffect(() => {
+    const fetchApplicantData = async () => {
+        setLoading(true);
+        const appData = await getApplication(params.id);
+        setApplicant(appData);
 
-  const handleStatusChange = (newStatus: "Approved" | "Rejected") => {
-    if (applicant) {
-        setApplicant(prev => prev ? {...prev, status: newStatus} : undefined);
-        // This would also update the master list/database in a real app
-        const index = mockApplicants.findIndex(a => a.id === applicant.id);
-        if (index !== -1) {
-            mockApplicants[index].status = newStatus;
+        if (appData) {
+            const distData = await getDistributorData(appData.distributorId);
+            setDistributor(distData);
         }
+
+        setLoading(false);
+    }
+    fetchApplicantData();
+  }, [params.id]);
+
+
+  const handleStatusChange = async (newStatus: "Approved" | "Rejected") => {
+    if (applicant) {
+        await updateApplicationStatus(applicant.id, newStatus);
+        setApplicant(prev => prev ? {...prev, status: newStatus} : null);
     }
   }
+
+  if (loading) {
+      return (
+        <div className="space-y-6">
+            <Skeleton className="h-9 w-32" />
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-1 space-y-6">
+                    <Skeleton className="h-40 w-full" />
+                    <Skeleton className="h-32 w-full" />
+                </div>
+                <div className="lg:col-span-2 space-y-6">
+                    <Skeleton className="h-48 w-full" />
+                    <Skeleton className="h-32 w-full" />
+                </div>
+            </div>
+        </div>
+      )
+  }
   
-  const distributor = mockDistributors.find(d => d.id === applicant?.distributorId);
-
-
   if (!applicant || !distributor) {
     return (
         <div className="text-center">

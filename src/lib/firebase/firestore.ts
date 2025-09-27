@@ -1,6 +1,7 @@
 
+
 import { app } from "@/lib/firebase";
-import { getFirestore, collection, getDocs, setDoc, doc, addDoc, getDoc } from "firebase/firestore";
+import { getFirestore, collection, getDocs, setDoc, doc, addDoc, getDoc, where, query, updateDoc } from "firebase/firestore";
 import type { Contract } from '@/lib/types';
 import { z } from "zod";
 
@@ -173,4 +174,69 @@ export async function addContract(data: ContractFormData) {
     console.error("Error adding contract to Firestore: ", error);
     throw new Error("Failed to publish contract.");
   }
+}
+
+// Application Schemas and Functions
+export const applicationSchema = z.object({
+    distributorId: z.string(),
+    distributorName: z.string(),
+    contractId: z.string(),
+    contractTitle: z.string(),
+    status: z.enum(["Pending", "Approved", "Rejected"]),
+    date: z.string(),
+    distributorDetails: z.string(),
+    productInfo: z.string(),
+    companyDatabase: z.string(),
+});
+export type Application = z.infer<typeof applicationSchema> & { id: string };
+
+export async function addApplication(application: Omit<Application, 'id'>) {
+    try {
+        const docRef = await addDoc(collection(db, "applications"), {
+            ...application,
+            createdAt: new Date(),
+        });
+        return docRef.id;
+    } catch (error) {
+        console.error("Error adding application to Firestore: ", error);
+        throw new Error("Failed to submit application.");
+    }
+}
+
+export async function getApplications(): Promise<Application[]> {
+    const q = query(collection(db, "applications"));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    } as Application));
+}
+
+export async function getApplication(id: string): Promise<Application | null> {
+    const docRef = doc(db, "applications", id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        return { id: docSnap.id, ...docSnap.data() } as Application;
+    }
+    return null;
+}
+
+export async function getApplicationByContractAndDistributor(contractId: string, distributorId: string): Promise<Application | null> {
+    const q = query(collection(db, "applications"), where("contractId", "==", contractId), where("distributorId", "==", distributorId));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+        const doc = querySnapshot.docs[0];
+        return { id: doc.id, ...doc.data() } as Application;
+    }
+    return null;
+}
+
+export async function updateApplicationStatus(id: string, status: "Approved" | "Rejected") {
+    try {
+        const docRef = doc(db, "applications", id);
+        await updateDoc(docRef, { status });
+    } catch (error) {
+        console.error("Error updating application status: ", error);
+        throw new Error("Failed to update application status.");
+    }
 }

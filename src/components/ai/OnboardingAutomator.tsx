@@ -13,19 +13,17 @@ interface OnboardingAutomatorProps {
     applicantEmail: string;
     contractTitle: string;
     onStatusChange: (newStatus: "Approved" | "Rejected") => void;
-    currentStatus: string;
+    currentStatus: "Pending" | "Approved" | "Rejected";
 }
 
 export default function OnboardingAutomator({ applicantName, applicantEmail, contractTitle, onStatusChange, currentStatus }: OnboardingAutomatorProps) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [decision, setDecision] = useState<"approved" | "rejected" | null>(currentStatus === "Approved" ? "approved" : currentStatus === "Rejected" ? "rejected" : null);
-
+  
   const handleApprove = async () => {
     setLoading(true);
     setError(null);
-    setDecision("approved");
     onStatusChange("Approved");
 
     try {
@@ -47,29 +45,19 @@ export default function OnboardingAutomator({ applicantName, applicantEmail, con
     }
   };
 
-  const handleReject = () => {
-    setDecision("rejected");
+  const handleReject = async () => {
     onStatusChange("Rejected");
     // In a real app, you'd send a rejection email.
     setResult(`A polite rejection email has been sent to ${applicantName}.`);
   };
-
-  const isDecided = decision || currentStatus === "Approved" || currentStatus === "Rejected";
-
-  if (isDecided) {
+  
+  if (currentStatus !== "Pending") {
     return (
-       <Alert variant={decision === 'approved' || currentStatus === 'Approved' ? 'default' : 'destructive'} className="bg-card">
-         {decision === 'approved' || currentStatus === 'Approved' ? <CheckCircle className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
-        <AlertTitle className="font-headline">Decision Made: {decision || currentStatus}</AlertTitle>
+       <Alert variant={currentStatus === 'Approved' ? 'default' : 'destructive'} className="bg-card">
+         {currentStatus === 'Approved' ? <CheckCircle className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
+        <AlertTitle className="font-headline">Decision Made: {currentStatus}</AlertTitle>
         <AlertDescription>
-          {loading ? (
-             <div className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Processing...</span>
-             </div>
-          ) : (
-            result || `This applicant was ${currentStatus.toLowerCase()}.`
-          )}
+          {result || `This applicant was ${currentStatus.toLowerCase()}. You can find their details in your active partners list.`}
         </AlertDescription>
       </Alert>
     )
@@ -92,6 +80,20 @@ export default function OnboardingAutomator({ applicantName, applicantEmail, con
             Reject
           </Button>
         </div>
+         {result && (
+           <Alert className="mt-4">
+             <CheckCircle className="h-4 w-4" />
+             <AlertTitle>Action Complete</AlertTitle>
+             <AlertDescription>{result}</AlertDescription>
+           </Alert>
+         )}
+         {error && (
+            <Alert variant="destructive" className="mt-4">
+                <XCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+            </Alert>
+         )}
       </CardContent>
     </Card>
   );

@@ -1,3 +1,5 @@
+
+'use client';
 import {
   Table,
   TableBody,
@@ -8,14 +10,46 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { mockApplicants } from "@/lib/mock-data"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { placeholderImages } from "@/lib/placeholder-images"
+import { getApplications, type Application } from "@/lib/firebase/firestore"
+import { useEffect, useState } from "react"
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ApplicantsPage() {
     const avatar = placeholderImages.find(p => p.id === 'distributor-avatar');
+    const [applications, setApplications] = useState<Application[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchApplications = async () => {
+            setLoading(true);
+            const apps = await getApplications();
+            setApplications(apps);
+            setLoading(false);
+        }
+        fetchApplications();
+    }, [])
+
+    if (loading) {
+        return (
+             <div className="grid gap-4">
+                <div className="flex items-center">
+                    <h1 className="text-lg font-semibold md:text-2xl font-headline">Contract Applicants</h1>
+                </div>
+                <div className="rounded-lg border shadow-sm p-4">
+                     <div className="space-y-3">
+                        {[...Array(3)].map((_, i) => (
+                            <Skeleton key={i} className="h-12 w-full" />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
   return (
     <>
       <div className="flex items-center">
@@ -33,7 +67,11 @@ export default function ApplicantsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockApplicants.map(applicant => (
+            {applications.length === 0 ? (
+                <TableRow>
+                    <TableCell colSpan={5} className="h-24 text-center">No applicants yet.</TableCell>
+                </TableRow>
+            ) : applications.map(applicant => (
                 <TableRow key={applicant.id}>
                     <TableCell>
                         <div className="flex items-center gap-3">
@@ -49,7 +87,7 @@ export default function ApplicantsPage() {
                     </TableCell>
                     <TableCell className="hidden md:table-cell">{applicant.date}</TableCell>
                     <TableCell>
-                        <Badge variant={applicant.status === "Pending" ? "secondary" : "default"}>
+                        <Badge variant={applicant.status === "Pending" ? "secondary" : applicant.status === "Approved" ? "default" : "destructive"}>
                             {applicant.status}
                         </Badge>
                     </TableCell>
