@@ -14,13 +14,14 @@ import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 
 export default function OfferDetailPage({ params }: { params: { id: string } }) {
-  const contract = mockContracts.find(c => c.id === params.id);
+  const { id } = params;
+  const contract = mockContracts.find(c => c.id === id);
   const contractImage = placeholderImages.find(p => p.id === 'contract-document');
   const { toast } = useToast();
 
   // In a real app, you'd get the current user's ID
   const currentDistributorId = "dist_1"; 
-  const existingApplication = mockApplicants.find(app => app.contractId === params.id && app.distributorId === currentDistributorId);
+  const existingApplication = mockApplicants.find(app => app.contractId === id && app.distributorId === currentDistributorId);
   
   const [applicationStatus, setApplicationStatus] = useState(existingApplication?.status);
 
@@ -31,7 +32,7 @@ export default function OfferDetailPage({ params }: { params: { id: string } }) 
             id: `app_${mockApplicants.length + 1}`,
             distributorId: currentDistributorId,
             distributorName: "John Doe", // Mock name
-            contractId: params.id,
+            contractId: id,
             contractTitle: contract!.title,
             status: "Pending",
             date: new Date().toISOString().split('T')[0],
