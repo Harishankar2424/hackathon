@@ -16,8 +16,8 @@ export const mockVendors = [
 export const mockDistributors = [
   {
     id: "dist_1",
-    firstName: "John",
-    lastName: "Doe",
+    firstName: "Lakshan",
+    lastName: "",
     email: "john.doe@regionaldist.com",
     phone: "123-456-7890",
     region: "North America",
@@ -26,8 +26,8 @@ export const mockDistributors = [
   },
   {
     id: "dist_2",
-    firstName: "Jane",
-    lastName: "Smith",
+    firstName: "Hari",
+    lastName: "",
     email: "jane.smith@eurosupplies.co.uk",
     phone: "098-765-4321",
     region: "Europe",
@@ -36,8 +36,8 @@ export const mockDistributors = [
   },
   {
     id: "dist_3",
-    firstName: "Kenji",
-    lastName: "Tanaka",
+    firstName: "Karthik",
+    lastName: "",
     email: "kenji.t@asiatrade.jp",
     phone: "555-123-4567",
     region: "Asia-Pacific",
@@ -46,8 +46,8 @@ export const mockDistributors = [
   },
   {
     id: "dist_4",
-    firstName: "Maria",
-    lastName: "Garcia",
+    firstName: "Praneeth",
+    lastName: "",
     email: "maria.g@latamconnect.com",
     phone: "444-555-6666",
     region: "Latin America",
@@ -189,7 +189,7 @@ export const mockApplicants = [
     {
         id: "app_2",
         distributorId: "dist_3",
-        distributorName: "Karthk",
+        distributorName: "Karthik",
         contractId: "cont_1",
         contractTitle: "North America Distribution Agreement for Z-Phone",
         status: "Pending",
@@ -225,10 +225,10 @@ export const mockApplicants = [
 ]
 
 export const mockPerformanceData = [
-  { name: 'John Doe', 'courses-completed': 5, 'average-score': 88 },
-  { name: 'Jane Smith', 'courses-completed': 8, 'average-score': 92 },
-  { name: 'Kenji Tanaka', 'courses-completed': 6, 'average-score': 85 },
-  { name: 'Maria Garcia', 'courses-completed': 7, 'average-score': 95 },
+  { name: 'Lakshan', 'courses-completed': 5, 'average-score': 88 },
+  { name: 'Hari', 'courses-completed': 8, 'average-score': 92 },
+  { name: 'Karthik', 'courses-completed': 6, 'average-score': 85 },
+  { name: 'Praneeth', 'courses-completed': 7, 'average-score': 95 },
   { name: 'David Lee', 'courses-completed': 4, 'average-score': 81 },
 ];
 

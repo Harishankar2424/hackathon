@@ -10,7 +10,7 @@ import { ArrowRight } from "lucide-react";
 
 export default function MyContractsPage() {
   // In a real app, you'd get the current user's ID
-  const currentDistributorId = "dist_1"; // Simulating logged-in user John Doe
+  const currentDistributorId = "dist_1"; // Simulating logged-in user Lakshan
   
   const myApprovedApps = mockApplicants.filter(
     app => app.distributorId === currentDistributorId && app.status === "Approved"

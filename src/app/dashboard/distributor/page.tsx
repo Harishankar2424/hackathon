@@ -15,8 +15,8 @@ import { ArrowRight } from "lucide-react";
 
 
 export default function DistributorDashboard() {
-  const currentDistributorId = "dist_1"; // Mocking John Doe
-  const myPerformance = mockPerformanceData.filter(d => d.name === "John Doe");
+  const currentDistributorId = "dist_1"; // Mocking Lakshan
+  const myPerformance = mockPerformanceData.filter(d => d.name === "Lakshan");
   
   const applicationsSent = mockApplicants.filter(app => app.distributorId === currentDistributorId).length;
   const approvedContracts = mockApplicants.filter(app => app.distributorId === currentDistributorId && app.status === "Approved").length;
@@ -68,7 +68,7 @@ export default function DistributorDashboard() {
       <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm min-h-[200px]">
         <div className="flex flex-col items-center gap-1 text-center">
           <h3 className="text-2xl font-bold tracking-tight font-headline">
-            Welcome, John!
+            Welcome, Lakshan!
           </h3>
           <p className="text-sm text-muted-foreground">
             Explore contract offers and manage your partnerships here.

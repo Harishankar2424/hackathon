@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 
 export default function TrainingPage() {
-  const myPerformance = mockPerformanceData.filter(d => d.name === "John Doe");
+  const myPerformance = mockPerformanceData.filter(d => d.name === "Lakshan");
   const myCourseIds = distributorCourses['dist_1'] || [];
   const myCourses = mockTrainingCourses.filter(course => myCourseIds.includes(course.id));
 

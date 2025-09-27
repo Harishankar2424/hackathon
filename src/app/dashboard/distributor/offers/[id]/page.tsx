@@ -30,7 +30,7 @@ export default function OfferDetailPage({ params: { id } }: { params: { id: stri
         mockApplicants.push({
             id: `app_${mockApplicants.length + 1}`,
             distributorId: currentDistributorId,
-            distributorName: "John Doe", // Mock name
+            distributorName: "Lakshan", // Mock name
             contractId: id,
             contractTitle: contract!.title,
             status: "Pending",
