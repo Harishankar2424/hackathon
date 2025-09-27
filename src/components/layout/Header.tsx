@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Menu, Sprout } from "lucide-react";
 
 const Logo = () => (
@@ -37,6 +37,10 @@ export default function Header() {
             </Button>
           </SheetTrigger>
           <SheetContent side="right">
+             <SheetHeader className="sr-only">
+                <SheetTitle>Menu</SheetTitle>
+                <SheetDescription>Main navigation menu for the application.</SheetDescription>
+            </SheetHeader>
             <div className="flex flex-col gap-4 p-4">
               <Logo />
               <Link href="/#features" className="text-sm font-medium hover:underline underline-offset-4">
