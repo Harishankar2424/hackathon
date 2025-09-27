@@ -1,18 +1,39 @@
+
+'use client';
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { mockApplicants } from "@/lib/mock-data";
-import { ArrowLeft, User, FileText, Bot } from "lucide-react";
+import { mockApplicants, mockDistributors } from "@/lib/mock-data";
+import { ArrowLeft, User, Bot } from "lucide-react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { placeholderImages } from "@/lib/placeholder-images";
 import DistributorVetting from "@/components/ai/DistributorVetting";
 import OnboardingAutomator from "@/components/ai/OnboardingAutomator";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 
 export default function ApplicantDetailPage({ params }: { params: { id: string } }) {
-  const applicant = mockApplicants.find(a => a.id === params.id);
+  const applicantData = mockApplicants.find(a => a.id === params.id);
   const avatar = placeholderImages.find(p => p.id === 'distributor-avatar');
+  
+  const [applicant, setApplicant] = useState(applicantData);
 
-  if (!applicant) {
+  const handleStatusChange = (newStatus: "Approved" | "Rejected") => {
+    if (applicant) {
+        setApplicant(prev => prev ? {...prev, status: newStatus} : undefined);
+        // This would also update the master list/database in a real app
+        const index = mockApplicants.findIndex(a => a.id === applicant.id);
+        if (index !== -1) {
+            mockApplicants[index].status = newStatus;
+        }
+    }
+  }
+  
+  const distributor = mockDistributors.find(d => d.id === applicant?.distributorId);
+
+
+  if (!applicant || !distributor) {
     return (
         <div className="text-center">
             <h1 className="text-2xl font-bold">Applicant not found</h1>
@@ -41,7 +62,7 @@ export default function ApplicantDetailPage({ params }: { params: { id: string }
         <div className="lg:col-span-1 space-y-6">
             <Card>
                 <CardHeader>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-start gap-4">
                          <Avatar className="h-16 w-16">
                             {avatar && <AvatarImage src={`${avatar.imageUrl}&${applicant.distributorId}`} alt={applicant.distributorName} data-ai-hint={avatar.imageHint} />}
                             <AvatarFallback>{applicant.distributorName.charAt(0)}</AvatarFallback>
@@ -52,8 +73,13 @@ export default function ApplicantDetailPage({ params }: { params: { id: string }
                         </div>
                     </div>
                 </CardHeader>
-                <CardContent className="text-sm space-y-2">
-                    <p><span className="font-semibold">Status:</span> {applicant.status}</p>
+                <CardContent className="text-sm space-y-4">
+                    <div>
+                        <span className="font-semibold">Status:</span>
+                        <Badge variant={applicant.status === "Pending" ? "secondary" : applicant.status === "Approved" ? "default" : "destructive"} className="ml-2">
+                            {applicant.status}
+                        </Badge>
+                    </div>
                     <p><span className="font-semibold">Applied on:</span> {applicant.date}</p>
                 </CardContent>
             </Card>
@@ -81,7 +107,13 @@ export default function ApplicantDetailPage({ params }: { params: { id: string }
                    />
                 </CardContent>
             </Card>
-            <OnboardingAutomator />
+            <OnboardingAutomator 
+                applicantName={applicant.distributorName}
+                applicantEmail={distributor.email}
+                contractTitle={applicant.contractTitle}
+                onStatusChange={handleStatusChange}
+                currentStatus={applicant.status}
+            />
         </div>
       </div>
     </div>

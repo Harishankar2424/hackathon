@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -9,16 +10,20 @@ import {
 import { FilePlus, Users, CheckSquare, BookOpen } from "lucide-react"
 import Link from "next/link"
 import PerformanceReport from "@/components/dashboard/PerformanceReport";
-import { mockPerformanceData } from "@/lib/mock-data";
+import { mockPerformanceData, mockApplicants, mockContracts } from "@/lib/mock-data";
 
-
-const stats = [
-    { title: "Open Contracts", value: "2", icon: <FilePlus className="h-4 w-4 text-muted-foreground" />, change: "+1 from last month" },
-    { title: "New Applicants", value: "5", icon: <Users className="h-4 w-4 text-muted-foreground" />, change: "+3 this week" },
-    { title: "Partnerships Formed", value: "12", icon: <CheckSquare className="h-4 w-4 text-muted-foreground" />, change: "since joining" },
-]
 
 export default function VendorDashboard() {
+    const openContracts = mockContracts.filter(c => c.status === 'Open').length;
+    const newApplicants = mockApplicants.filter(a => a.status === 'Pending').length;
+    const partnershipsFormed = mockApplicants.filter(a => a.status === 'Approved').length;
+
+    const stats = [
+        { title: "Open Contracts", value: openContracts.toString(), icon: <FilePlus className="h-4 w-4 text-muted-foreground" /> },
+        { title: "New Applicants", value: newApplicants.toString(), icon: <Users className="h-4 w-4 text-muted-foreground" /> },
+        { title: "Partnerships Formed", value: partnershipsFormed.toString(), icon: <CheckSquare className="h-4 w-4 text-muted-foreground" /> },
+    ]
+
   return (
     <div className="grid gap-4">
       <div className="flex items-center">
@@ -44,7 +49,7 @@ export default function VendorDashboard() {
                 <CardContent>
                     <div className="text-2xl font-bold">{stat.value}</div>
                     <p className="text-xs text-muted-foreground">
-                    {stat.change}
+                        Based on all data
                     </p>
                 </CardContent>
             </Card>
@@ -60,7 +65,7 @@ export default function VendorDashboard() {
                     Review of distributor progress and scores in assigned training sessions.
                 </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="h-[400px]">
                 <PerformanceReport data={mockPerformanceData} />
             </CardContent>
         </Card>

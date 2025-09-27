@@ -1,15 +1,52 @@
+
+'use client';
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { mockContracts } from "@/lib/mock-data";
-import { ArrowLeft, CheckCircle, FileText } from "lucide-react";
+import { mockContracts, mockApplicants } from "@/lib/mock-data";
+import { ArrowLeft, CheckCircle, FileText, Send } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { placeholderImages } from "@/lib/placeholder-images";
 import ContractSummarizer from "@/components/ai/ContractSummarizer";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
 
 export default function OfferDetailPage({ params }: { params: { id: string } }) {
   const contract = mockContracts.find(c => c.id === params.id);
   const contractImage = placeholderImages.find(p => p.id === 'contract-document');
+  const { toast } = useToast();
+
+  // In a real app, you'd get the current user's ID
+  const currentDistributorId = "dist_1"; 
+  const existingApplication = mockApplicants.find(app => app.contractId === params.id && app.distributorId === currentDistributorId);
+  
+  const [applicationStatus, setApplicationStatus] = useState(existingApplication?.status);
+
+  const handleApply = () => {
+    // This is a mock function. In a real app, you'd write to a database.
+    if (!existingApplication) {
+        mockApplicants.push({
+            id: `app_${mockApplicants.length + 1}`,
+            distributorId: currentDistributorId,
+            distributorName: "John Doe", // Mock name
+            contractId: params.id,
+            contractTitle: contract!.title,
+            status: "Pending",
+            date: new Date().toISOString().split('T')[0],
+            distributorDetails: "Region: North America, Trustworthiness: 85/100, Work History: 5 years experience in tech distribution. Strong sales record in the US and Canada.",
+            productInfo: "Z-Phone is a high-end smartphone targeting professionals and tech enthusiasts.",
+            companyDatabase: "Internal sales data indicates strong demand for premium smartphones in the NA region."
+        });
+    }
+    setApplicationStatus("Pending");
+    toast({
+        title: "Application Sent!",
+        description: `Your application for the ${contract?.title} has been submitted.`
+    });
+  }
+
 
   if (!contract) {
     return (
@@ -25,6 +62,21 @@ export default function OfferDetailPage({ params }: { params: { id: string } }) 
         </div>
     )
   }
+  
+  const getStatusBadge = (status: string | undefined) => {
+    if (!status) return null;
+    switch(status) {
+        case 'Approved':
+            return <Badge variant="default" className="bg-green-500/80">{status}</Badge>;
+        case 'Pending':
+            return <Badge variant="secondary">{status}</Badge>;
+        case 'Rejected':
+            return <Badge variant="destructive">{status}</Badge>;
+        default:
+            return <Badge variant="outline">{status}</Badge>;
+    }
+  }
+
 
   return (
     <div className="grid gap-6">
@@ -76,11 +128,21 @@ export default function OfferDetailPage({ params }: { params: { id: string } }) 
                     <CardDescription>Ready to partner with {contract.vendorName}?</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">By applying, you agree to share your profile information with {contract.vendorName} for consideration.</p>
-                    <Button className="w-full" size="lg">
-                        <CheckCircle className="mr-2 h-4 w-4" />
-                        Apply Now
-                    </Button>
+                    {applicationStatus ? (
+                         <div className="flex flex-col items-center justify-center text-center p-4 bg-muted rounded-lg">
+                            <p className="font-semibold">Your Application Status:</p>
+                            <div className="mt-2">{getStatusBadge(applicationStatus)}</div>
+                            <p className="text-xs text-muted-foreground mt-2">The vendor has been notified. You will be updated on any progress.</p>
+                        </div>
+                    ) : (
+                        <>
+                         <p className="text-sm text-muted-foreground mb-4">By applying, you agree to share your profile information with {contract.vendorName} for consideration.</p>
+                        <Button className="w-full" size="lg" onClick={handleApply}>
+                            <Send className="mr-2 h-4 w-4" />
+                            Apply Now
+                        </Button>
+                        </>
+                    )}
                 </CardContent>
             </Card>
         </div>

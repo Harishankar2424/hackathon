@@ -1,3 +1,4 @@
+
 import {
   Card,
   CardContent,
@@ -8,20 +9,25 @@ import {
 import { Briefcase, FileText, CheckCircle, BookOpen } from "lucide-react"
 import Link from "next/link";
 import PerformanceReport from "@/components/dashboard/PerformanceReport";
-import { mockPerformanceData } from "@/lib/mock-data";
+import { mockPerformanceData, mockContracts, mockApplicants } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
 
-const stats = [
-    { title: "Active Offers", value: "2", icon: <Briefcase className="h-4 w-4 text-muted-foreground" /> },
-    { title: "Applications Sent", value: "3", icon: <FileText className="h-4 w-4 text-muted-foreground" /> },
-    { title: "Approved Contracts", value: "1", icon: <CheckCircle className="h-4 w-4 text-muted-foreground" /> },
-]
-
 export default function DistributorDashboard() {
+  const currentDistributorId = "dist_1"; // Mocking John Doe
   const myPerformance = mockPerformanceData.filter(d => d.name === "John Doe");
   
+  const applicationsSent = mockApplicants.filter(app => app.distributorId === currentDistributorId).length;
+  const approvedContracts = mockApplicants.filter(app => app.distributorId === currentDistributorId && app.status === "Approved").length;
+  const activeOffers = mockContracts.filter(c => c.status === "Open").length;
+
+  const stats = [
+    { title: "Active Offers", value: activeOffers.toString(), icon: <Briefcase className="h-4 w-4 text-muted-foreground" /> },
+    { title: "Applications Sent", value: applicationsSent.toString(), icon: <FileText className="h-4 w-4 text-muted-foreground" /> },
+    { title: "Approved Contracts", value: approvedContracts.toString(), icon: <CheckCircle className="h-4 w-4 text-muted-foreground" /> },
+]
+
   return (
     <div className="grid gap-4">
       <div className="flex items-center">

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -7,22 +8,31 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { CheckCircle, XCircle, Loader2, Send } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-export default function OnboardingAutomator() {
+interface OnboardingAutomatorProps {
+    applicantName: string;
+    applicantEmail: string;
+    contractTitle: string;
+    onStatusChange: (newStatus: "Approved" | "Rejected") => void;
+    currentStatus: string;
+}
+
+export default function OnboardingAutomator({ applicantName, applicantEmail, contractTitle, onStatusChange, currentStatus }: OnboardingAutomatorProps) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [decision, setDecision] = useState<"approved" | "rejected" | null>(null);
+  const [decision, setDecision] = useState<"approved" | "rejected" | null>(currentStatus === "Approved" ? "approved" : currentStatus === "Rejected" ? "rejected" : null);
 
   const handleApprove = async () => {
     setLoading(true);
     setError(null);
     setDecision("approved");
+    onStatusChange("Approved");
 
     try {
       const response = await automateOfficialMailAndInvite({
         vendorEmail: "vendor@synergychain.com",
-        distributorEmail: "distributor@example.com",
-        contractDetails: "North America Distribution Agreement for Z-Phone",
+        distributorEmail: applicantEmail,
+        contractDetails: contractTitle,
         slackInviteLink: "https://slack.com/invite/...",
         informationPortalLink: "https://notion.so/synergychain/...",
         trainingSessionDetails: "Assigned 'Z-Phone Sales Training' and 'Advanced Negotiation' courses."
@@ -31,6 +41,7 @@ export default function OnboardingAutomator() {
     } catch (e) {
       console.error(e);
       setError("Failed to automate onboarding. Please try again.");
+      setResult("The applicant has been approved, but the automated email failed to send. Please contact them manually.");
     } finally {
       setLoading(false);
     }
@@ -38,14 +49,18 @@ export default function OnboardingAutomator() {
 
   const handleReject = () => {
     setDecision("rejected");
-    setResult("A polite rejection email has been sent to the applicant.");
+    onStatusChange("Rejected");
+    // In a real app, you'd send a rejection email.
+    setResult(`A polite rejection email has been sent to ${applicantName}.`);
   };
 
-  if (decision) {
+  const isDecided = decision || currentStatus === "Approved" || currentStatus === "Rejected";
+
+  if (isDecided) {
     return (
-       <Alert variant={decision === 'approved' ? 'default' : 'destructive'} className="bg-card">
-         <CheckCircle className="h-4 w-4" />
-        <AlertTitle className="font-headline">Decision Made: {decision === 'approved' ? 'Approved' : 'Rejected'}</AlertTitle>
+       <Alert variant={decision === 'approved' || currentStatus === 'Approved' ? 'default' : 'destructive'} className="bg-card">
+         {decision === 'approved' || currentStatus === 'Approved' ? <CheckCircle className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
+        <AlertTitle className="font-headline">Decision Made: {decision || currentStatus}</AlertTitle>
         <AlertDescription>
           {loading ? (
              <div className="flex items-center gap-2">
@@ -53,7 +68,7 @@ export default function OnboardingAutomator() {
                 <span>Processing...</span>
              </div>
           ) : (
-            result
+            result || `This applicant was ${currentStatus.toLowerCase()}.`
           )}
         </AlertDescription>
       </Alert>

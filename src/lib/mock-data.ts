@@ -132,6 +132,18 @@ export const mockApplicants = [
         distributorDetails: "Region: Latin America, Trustworthiness: 92/100, Work History: Expert in negotiating import/export tariffs in Latin America. 7 years experience. Relocating to EU.",
         productInfo: "InnovateHub is a SaaS platform for project management, competing with Asana and Monday.com. We need strong local partners to break into the EU market.",
         companyDatabase: "The EU market for project management software is growing at 15% YoY. Our main competitor, TaskMaster Pro, has a weak presence in Germany and France, which are key targets."
+    },
+    {
+        id: "app_4",
+        distributorId: "dist_2",
+        distributorName: "Jane Smith",
+        contractId: "cont_2",
+        contractTitle: "Exclusive EU Contract for InnovateHub Software",
+        status: "Pending",
+        date: "2024-08-01",
+        distributorDetails: "Region: Europe, Trustworthiness: 95/100, Work History: Specializes in medical device distribution across the EU. 10+ years in the field.",
+        productInfo: "InnovateHub is a SaaS platform for project management, competing with Asana and Monday.com. We need strong local partners to break into the EU market.",
+        companyDatabase: "The EU market for project management software is growing at 15% YoY. Our main competitor, TaskMaster Pro, has a weak presence in Germany and France, which are key targets."
     }
 ]
 
