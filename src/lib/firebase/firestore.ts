@@ -106,6 +106,26 @@ export async function getContracts(): Promise<Contract[]> {
     return contractList;
 }
 
+export async function getContract(id: string): Promise<Contract | null> {
+    const docRef = doc(db, "active_offers", id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        const data = docSnap.data();
+        return {
+            id: docSnap.id,
+            vendorId: data.vendorId,
+            vendorName: data.vendorName,
+            title: data.title,
+            product: data.product,
+            region: data.region,
+            status: data.status,
+            details: data.details,
+            summary: data.summary,
+        } as Contract;
+    }
+    return null;
+}
+
 export const contractFormSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   product: z.string().min(1, 'Product is required'),
