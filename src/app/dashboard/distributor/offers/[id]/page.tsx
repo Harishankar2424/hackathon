@@ -138,7 +138,7 @@ function OfferDetailClient({ contract }: { contract: Contract }) {
           <Card className="bg-secondary/50">
             <CardHeader>
               <CardTitle className="font-headline text-2xl flex items-center gap-2">
-                <FileText /> AI Contract Summary
+                 AI Contract Summary
               </CardTitle>
               <CardDescription>Key points summarized by SynergyChain AI.</CardDescription>
             </CardHeader>
