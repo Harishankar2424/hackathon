@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { mockApplicants } from "@/lib/mock-data";
+import { mockApplicants, mockDistributors } from "@/lib/mock-data";
 import { ArrowLeft, CheckCircle, FileText, Send } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -15,29 +15,41 @@ import { Badge } from "@/components/ui/badge";
 import { getContract } from "@/lib/firebase/firestore";
 import type { Contract } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/lib/auth";
 
 function OfferDetailClient({ contract }: { contract: Contract }) {
+  const { user, userData } = useAuth();
   const contractImage = placeholderImages.find(p => p.id === 'contract-document');
   const { toast } = useToast();
 
-  // In a real app, you'd get the current user's ID
-  const currentDistributorId = "dist_1"; 
-  const existingApplication = mockApplicants.find(app => app.contractId === contract.id && app.distributorId === currentDistributorId);
+  const currentDistributorId = user?.uid;
+  const existingApplication = currentDistributorId 
+    ? mockApplicants.find(app => app.contractId === contract.id && app.distributorId === currentDistributorId)
+    : undefined;
   
   const [applicationStatus, setApplicationStatus] = useState(existingApplication?.status);
 
   const handleApply = () => {
+    if (!currentDistributorId || !userData) {
+        toast({
+            title: "Please log in",
+            description: "You must be logged in as a distributor to apply.",
+            variant: "destructive"
+        });
+        return;
+    }
+    
     // This is a mock function. In a real app, you'd write to a database.
     if (!existingApplication) {
         mockApplicants.push({
             id: `app_${mockApplicants.length + 1}`,
             distributorId: currentDistributorId,
-            distributorName: "Lakshan", // Mock name
+            distributorName: `${userData.firstName} ${userData.lastName}`,
             contractId: contract.id,
-            contractTitle: contract!.title,
+            contractTitle: contract.title,
             status: "Pending",
             date: new Date().toISOString().split('T')[0],
-            distributorDetails: "Region: North America, Trustworthiness: 85/100, Work History: 5 years experience in tech distribution. Strong sales record in the US and Canada.",
+            distributorDetails: `Region: ${userData.region}, Trustworthiness: 85/100, Work History: 5 years experience in tech distribution. Strong sales record in the US and Canada.`,
             productInfo: "Z-Phone is a high-end smartphone targeting professionals and tech enthusiasts.",
             companyDatabase: "Internal sales data indicates strong demand for premium smartphones in the NA region."
         });
@@ -45,7 +57,7 @@ function OfferDetailClient({ contract }: { contract: Contract }) {
     setApplicationStatus("Pending");
     toast({
         title: "Application Sent!",
-        description: `Your application for the ${contract?.title} has been submitted.`
+        description: `Your application for the ${contract.title} has been submitted.`
     });
   }
   
