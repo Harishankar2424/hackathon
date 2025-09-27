@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -18,13 +19,13 @@ const PerformanceDataSchema = z.object({
   progress: z.number().describe('The overall progress percentage across all assigned courses.'),
 });
 
-export const SummarizeDistributorPerformanceInputSchema = z.object({
+const SummarizeDistributorPerformanceInputSchema = z.object({
   performanceData: PerformanceDataSchema.describe('The performance data for a single distributor.'),
 });
 
 export type SummarizeDistributorPerformanceInput = z.infer<typeof SummarizeDistributorPerformanceInputSchema>;
 
-export const SummarizeDistributorPerformanceOutputSchema = z.object({
+const SummarizeDistributorPerformanceOutputSchema = z.object({
   summary: z
     .string()
     .describe('A concise AI-generated summary of the distributor\'s training performance, highlighting strengths, areas for improvement, and overall engagement.'),
