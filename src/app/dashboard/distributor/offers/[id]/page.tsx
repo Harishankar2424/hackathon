@@ -180,19 +180,20 @@ function OfferDetailClient({ contract }: { contract: Contract }) {
 }
 
 
-export default function OfferDetailPage({ params: { id } }: { params: { id: string } }) {
+export default function OfferDetailPage({ params }: { params: { id: string } }) {
   const [contract, setContract] = useState<Contract | null>(null);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
     const fetchContract = async () => {
+      if (!params.id) return;
       setLoading(true);
-      const fetchedContract = await getContract(id);
+      const fetchedContract = await getContract(params.id);
       setContract(fetchedContract);
       setLoading(false);
     };
     fetchContract();
-  }, [id]);
+  }, [params.id]);
 
 
   if (loading) {
