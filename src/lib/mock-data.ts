@@ -43,6 +43,16 @@ export const mockDistributors = [
     workHistory: "Focus on consumer electronics in Japan and South Korea. Excellent logistics network.",
     trustworthiness: 90,
   },
+  {
+    id: "dist_4",
+    firstName: "Maria",
+    lastName: "Garcia",
+    email: "maria.g@latamconnect.com",
+    phone: "444-555-6666",
+    region: "Latin America",
+    workHistory: "Expert in negotiating import/export tariffs in Latin America. 7 years experience.",
+    trustworthiness: 92,
+  },
 ];
 
 export const mockContracts = [
@@ -93,7 +103,7 @@ export const mockApplicants = [
         distributorName: "John Doe",
         contractId: "cont_1",
         contractTitle: "North America Distribution Agreement for Z-Phone",
-        status: "Pending",
+        status: "Approved",
         date: "2024-07-29",
         distributorDetails: "Region: North America, Trustworthiness: 85/100, Work History: 5 years experience in tech distribution. Strong sales record in the US and Canada.",
         productInfo: "Z-Phone is a high-end smartphone targeting professionals and tech enthusiasts. Key features include a quantum-dot display and advanced security protocols.",
@@ -110,6 +120,18 @@ export const mockApplicants = [
         distributorDetails: "Region: Asia-Pacific, Trustworthiness: 90/100, Work History: Focus on consumer electronics in Japan and South Korea. Excellent logistics network. Looking to expand into NA market.",
         productInfo: "Z-Phone is a high-end smartphone targeting professionals and tech enthusiasts. Key features include a quantum-dot display and advanced security protocols.",
         companyDatabase: "Internal sales data indicates strong demand for premium smartphones in the NA region, especially on the West Coast."
+    },
+    {
+        id: "app_3",
+        distributorId: "dist_4",
+        distributorName: "Maria Garcia",
+        contractId: "cont_2",
+        contractTitle: "Exclusive EU Contract for InnovateHub Software",
+        status: "Approved",
+        date: "2024-07-27",
+        distributorDetails: "Region: Latin America, Trustworthiness: 92/100, Work History: Expert in negotiating import/export tariffs in Latin America. 7 years experience. Relocating to EU.",
+        productInfo: "InnovateHub is a SaaS platform for project management, competing with Asana and Monday.com. We need strong local partners to break into the EU market.",
+        companyDatabase: "The EU market for project management software is growing at 15% YoY. Our main competitor, TaskMaster Pro, has a weak presence in Germany and France, which are key targets."
     }
 ]
 
