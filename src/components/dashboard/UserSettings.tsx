@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -14,29 +15,22 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Camera, User } from "lucide-react";
-import { regions } from "@/lib/mock-data";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import Link from "next/link";
+import { useTheme } from "next-themes";
 
 
 export function UserSettings() {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
 
   const handleSaveChanges = () => {
-    // Here you would typically handle form submission,
-    // like calling an API to update user data.
     toast({
-        title: "Success!",
-        description: "Your profile has been updated successfully."
+        title: "Settings Saved!",
+        description: "Your changes have been updated successfully."
     })
     setOpen(false);
   }
@@ -48,64 +42,72 @@ export function UserSettings() {
           Settings
         </DropdownMenuItem>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="font-headline">Edit Profile</DialogTitle>
+          <DialogTitle className="font-headline">Settings</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            Manage your account settings, preferences, and notifications.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-            <div className="flex items-center gap-4">
-                <div className="relative group">
-                    <Avatar className="h-20 w-20">
-                        <AvatarImage src="https://picsum.photos/seed/user-avatar/100/100" alt="@user" />
-                        <AvatarFallback>U</AvatarFallback>
-                    </Avatar>
-                    <label htmlFor="profile-picture" className="absolute inset-0 flex items-center justify-center bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
-                        <Camera className="h-6 w-6" />
-                        <span className="sr-only">Change profile picture</span>
-                    </label>
-                    <input type="file" id="profile-picture" className="hidden" accept="image/*" />
-                </div>
-                <div className="grid gap-2 flex-1">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <Label htmlFor="first-name">First Name</Label>
-                            <Input id="first-name" defaultValue="John" />
-                        </div>
-                        <div>
-                            <Label htmlFor="last-name">Last Name</Label>
-                            <Input id="last-name" defaultValue="Doe" />
-                        </div>
+        <div className="grid gap-6 py-4">
+            
+            <div className="space-y-4">
+                <h4 className="font-medium">Display</h4>
+                <div className="flex items-center justify-between rounded-lg border p-4">
+                     <div>
+                        <Label htmlFor="theme-switcher">Theme</Label>
+                        <p className="text-xs text-muted-foreground">Select your preferred interface theme.</p>
                     </div>
+                     <Select onValueChange={(value) => setTheme(value)} defaultValue={theme}>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Select theme" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="light">Light</SelectItem>
+                            <SelectItem value="dark">Dark</SelectItem>
+                            <SelectItem value="system">System</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
             </div>
-            <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" defaultValue="user@example.com" />
+
+            <Separator />
+
+            <div className="space-y-4">
+                 <h4 className="font-medium">Notifications</h4>
+                 <div className="flex items-center justify-between rounded-lg border p-4">
+                    <div>
+                        <Label htmlFor="notification-offers">New Contract Offers</Label>
+                        <p className="text-xs text-muted-foreground">Receive alerts when new contracts are published.</p>
+                    </div>
+                    <Switch id="notification-offers" defaultChecked />
+                </div>
+                 <div className="flex items-center justify-between rounded-lg border p-4">
+                    <div>
+                        <Label htmlFor="notification-status">Application Status</Label>
+                         <p className="text-xs text-muted-foreground">Get notified about updates to your applications.</p>
+                    </div>
+                    <Switch id="notification-status" defaultChecked />
+                </div>
             </div>
-            <div className="grid gap-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input id="phone" type="tel" defaultValue="+1 234 567 890" />
+
+            <Separator />
+
+            <div className="space-y-4">
+                <h4 className="font-medium">Legal</h4>
+                <div className="text-sm text-muted-foreground rounded-lg border p-4">
+                   <p>For more information about your rights and responsibilities, please review our legal documents.</p>
+                   <div className="mt-2">
+                     <Link href="#" className="text-primary underline underline-offset-4">Terms of Service</Link>
+                     <span className="mx-2 text-border">|</span>
+                     <Link href="#" className="text-primary underline underline-offset-4">Privacy Policy</Link>
+                   </div>
+                </div>
             </div>
-            <div className="grid gap-2">
-                <Label htmlFor="region">Region</Label>
-                 <Select defaultValue="north-america">
-                    <SelectTrigger>
-                        <SelectValue placeholder="Select your region" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {regions.map((region) => (
-                        <SelectItem key={region} value={region.toLowerCase().replace(" ", "-")}>
-                            {region}
-                        </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
+            
         </div>
         <DialogFooter>
+          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
           <Button type="submit" onClick={handleSaveChanges}>Save changes</Button>
         </DialogFooter>
       </DialogContent>
