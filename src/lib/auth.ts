@@ -35,6 +35,13 @@ export function useAuth() {
       // Handle Errors here.
       const errorCode = error.code;
       const errorMessage = error.message;
+      
+      // Don't show an error toast if the user simply closes the popup.
+      if (errorCode === 'auth/popup-closed-by-user') {
+        console.log("Sign-in popup closed by user.");
+        return;
+      }
+
       console.error(`Authentication Error (${errorCode}): ${errorMessage}`);
       toast({
         title: "Authentication Failed",
