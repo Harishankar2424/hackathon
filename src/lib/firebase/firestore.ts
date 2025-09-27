@@ -1,6 +1,6 @@
 
 import { app } from "@/lib/firebase";
-import { getFirestore, collection, getDocs, setDoc, doc } from "firebase/firestore";
+import { getFirestore, collection, getDocs, setDoc, doc, addDoc } from "firebase/firestore";
 import type { Contract } from '@/lib/types';
 import { z } from "zod";
 
@@ -49,3 +49,51 @@ export async function getContracts(): Promise<Contract[]> {
     return contractList;
 }
 
+export const contractFormSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  product: z.string().min(1, 'Product is required'),
+  region: z.string().min(1, 'Region is required'),
+  rights: z.string().min(1, 'Rights are required'),
+  territory: z.string().min(1, 'Territory is required'),
+  pricing: z.string().min(1, 'Pricing is required'),
+  requirements: z.string().min(1, 'Requirements are required'),
+  ip: z.string().min(1, 'IP and Brand use is required'),
+  term: z.string().min(1, 'Term is required'),
+  confidentiality: z.string().min(1, 'Confidentiality is required'),
+  fullDetails: z.string().optional(),
+});
+export type ContractFormData = z.infer<typeof contractFormSchema>;
+
+export async function addContract(data: ContractFormData) {
+  try {
+    // This is a simplified version. In a real app, you'd get the vendor name and ID from the logged-in user.
+    const vendorName = "Global Tech Inc."; 
+    const vendorId = "ven_1";
+
+    const contractDetails = `
+      Exclusive/Non-Exclusive Rights: ${data.rights}
+      Territory & Sales Scope: ${data.territory}
+      Pricing & Payment Terms: ${data.pricing}
+      Minimum Sales or Purchase Requirements: ${data.requirements}
+      Intellectual Property & Brand Use: ${data.ip}
+      Term, Renewal & Termination: ${data.term}
+      Confidentiality & Non-Compete: ${data.confidentiality}
+
+      ${data.fullDetails || ''}
+    `.trim();
+
+    await addDoc(collection(db, "active_offers"), {
+      vendorId,
+      vendorName,
+      title: data.title,
+      product: data.product,
+      region: data.region,
+      status: 'Open',
+      details: contractDetails,
+      createdAt: new Date(),
+    });
+  } catch (error) {
+    console.error("Error adding contract to Firestore: ", error);
+    throw new Error("Failed to publish contract.");
+  }
+}
