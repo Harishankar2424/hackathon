@@ -17,8 +17,12 @@ const Logo = () => (
 export default function Header() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  const handleLinkClick = () => {
-    // Add a small delay to allow the user to see the scroll before closing.
+  const handleLinkClick = (isFeaturesLink: boolean = false) => {
+    if (isFeaturesLink) {
+      // Don't close the sheet for the features link, just let it scroll
+      return;
+    }
+    // For other links, close the sheet with a small delay
     setTimeout(() => {
         setIsSheetOpen(false);
     }, 200);
@@ -56,16 +60,16 @@ export default function Header() {
             </SheetHeader>
             <div className="flex flex-col gap-4 p-4">
               <Logo />
-              <Link href="/#features" onClick={handleLinkClick} className="text-sm font-medium hover:underline underline-offset-4">
+              <Link href="/#features" onClick={() => setIsSheetOpen(false)} className="text-sm font-medium hover:underline underline-offset-4">
                 Features
               </Link>
-              <Link href="/dashboard" onClick={handleLinkClick} className="text-sm font-medium hover:underline underline-offset-4">
+              <Link href="/dashboard" onClick={() => handleLinkClick()} className="text-sm font-medium hover:underline underline-offset-4">
                   Dashboard
               </Link>
-              <Link href="/auth/login" onClick={handleLinkClick} className="text-sm font-medium hover:underline underline-offset-4">
+              <Link href="/auth/login" onClick={() => handleLinkClick()} className="text-sm font-medium hover:underline underline-offset-4">
                 Login
               </Link>
-              <Link href="/auth/signup/distributor" onClick={handleLinkClick}>
+              <Link href="/auth/signup/distributor" onClick={() => handleLinkClick()}>
                 <Button className="w-full">Get Started</Button>
               </Link>
             </div>
