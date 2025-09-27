@@ -13,7 +13,8 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 
-export default function OfferDetailPage({ params: { id } }: { params: { id: string } }) {
+export default function OfferDetailPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const contract = mockContracts.find(c => c.id === id);
   const contractImage = placeholderImages.find(p => p.id === 'contract-document');
   const { toast } = useToast();
