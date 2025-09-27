@@ -23,9 +23,12 @@ function OfferDetailClient({ contract }: { contract: Contract }) {
   const { toast } = useToast();
 
   const currentDistributorId = user?.uid;
-  const existingApplication = currentDistributorId 
-    ? mockApplicants.find(app => app.contractId === contract.id && app.distributorId === currentDistributorId)
-    : undefined;
+  
+  const [existingApplication, setExistingApplication] = useState(() => 
+    currentDistributorId 
+      ? mockApplicants.find(app => app.contractId === contract.id && app.distributorId === currentDistributorId)
+      : undefined
+  );
   
   const [applicationStatus, setApplicationStatus] = useState(existingApplication?.status);
 
@@ -38,23 +41,34 @@ function OfferDetailClient({ contract }: { contract: Contract }) {
         });
         return;
     }
+
+    const alreadyApplied = mockApplicants.some(app => app.contractId === contract.id && app.distributorId === currentDistributorId);
     
-    // This is a mock function. In a real app, you'd write to a database.
-    if (!existingApplication) {
-        mockApplicants.push({
-            id: `app_${mockApplicants.length + 1}`,
-            distributorId: currentDistributorId,
-            distributorName: `${userData.firstName} ${userData.lastName}`,
-            contractId: contract.id,
-            contractTitle: contract.title,
-            status: "Pending",
-            date: new Date().toISOString().split('T')[0],
-            distributorDetails: `Region: ${userData.region}, Trustworthiness: 85/100, Work History: 5 years experience in tech distribution. Strong sales record in the US and Canada.`,
-            productInfo: "Z-Phone is a high-end smartphone targeting professionals and tech enthusiasts.",
-            companyDatabase: "Internal sales data indicates strong demand for premium smartphones in the NA region."
+    if (alreadyApplied) {
+        toast({
+            title: "Already Applied",
+            description: "You have already submitted an application for this contract."
         });
+        return;
     }
+    
+    const newApplication = {
+        id: `app_${mockApplicants.length + 1}`,
+        distributorId: currentDistributorId,
+        distributorName: `${userData.firstName} ${userData.lastName}`,
+        contractId: contract.id,
+        contractTitle: contract.title,
+        status: "Pending" as "Pending" | "Approved" | "Rejected",
+        date: new Date().toISOString().split('T')[0],
+        distributorDetails: `Region: ${userData.region}, Trustworthiness: 85/100, Work History: 5 years experience in tech distribution. Strong sales record in the US and Canada.`,
+        productInfo: "Z-Phone is a high-end smartphone targeting professionals and tech enthusiasts.",
+        companyDatabase: "Internal sales data indicates strong demand for premium smartphones in the NA region."
+    };
+
+    mockApplicants.push(newApplication);
+    setExistingApplication(newApplication);
     setApplicationStatus("Pending");
+    
     toast({
         title: "Application Sent!",
         description: `Your application for the ${contract.title} has been submitted.`
