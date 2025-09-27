@@ -1,11 +1,12 @@
 
 import { app } from "@/lib/firebase";
-import { getFirestore, collection, getDocs, setDoc, doc, addDoc } from "firebase/firestore";
+import { getFirestore, collection, getDocs, setDoc, doc, addDoc, getDoc } from "firebase/firestore";
 import type { Contract } from '@/lib/types';
 import { z } from "zod";
 
 const db = getFirestore(app);
 
+// Distributor Schemas and Functions
 export const distributorFormSchema = z.object({
     firstName: z.string(),
     lastName: z.string(),
@@ -15,17 +16,54 @@ export const distributorFormSchema = z.object({
 });
 export type DistributorData = z.infer<typeof distributorFormSchema>;
 
-
 export async function addDistributor(userId: string, data: DistributorData) {
     try {
         await setDoc(doc(db, "distributors", userId), {
             ...data,
+            role: 'distributor',
             createdAt: new Date(),
         });
     } catch (error) {
         console.error("Error adding distributor to Firestore: ", error);
         throw new Error("Failed to save distributor information.");
     }
+}
+
+// Vendor Schemas and Functions
+export const vendorFormSchema = z.object({
+  companyName: z.string().min(1, 'Company name is required'),
+  email: z.string().email('Invalid email address'),
+});
+export type VendorData = z.infer<typeof vendorFormSchema>;
+
+export async function addVendor(userId: string, data: VendorData) {
+    try {
+        await setDoc(doc(db, "vendors", userId), {
+            ...data,
+            role: 'vendor',
+            createdAt: new Date(),
+        });
+    } catch (error) {
+        console.error("Error adding vendor to Firestore: ", error);
+        throw new Error("Failed to save vendor information.");
+    }
+}
+
+// User Role check
+export async function getUserRole(userId: string): Promise<string | null> {
+    const distributorDocRef = doc(db, 'distributors', userId);
+    const distributorDoc = await getDoc(distributorDocRef);
+    if (distributorDoc.exists()) {
+        return 'distributor';
+    }
+
+    const vendorDocRef = doc(db, 'vendors', userId);
+    const vendorDoc = await getDoc(vendorDocRef);
+    if (vendorDoc.exists()) {
+        return 'vendor';
+    }
+
+    return null;
 }
 
 
