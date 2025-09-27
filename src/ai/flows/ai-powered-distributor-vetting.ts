@@ -67,7 +67,7 @@ const aiPoweredDistributorVettingFlow = ai.defineFlow(
     outputSchema: AIPoweredDistributorVettingOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
+    const {output} = await prompt.generate(input);
     return output!;
   }
 );

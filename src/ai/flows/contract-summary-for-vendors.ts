@@ -54,7 +54,7 @@ const summarizeContractFlow = ai.defineFlow(
     outputSchema: SummarizeContractOutputSchema,
   },
   async input => {
-    const {output} = await summarizeContractPrompt(input);
+    const {output} = await summarizeContractPrompt.generate(input);
     return output!;
   }
 );
