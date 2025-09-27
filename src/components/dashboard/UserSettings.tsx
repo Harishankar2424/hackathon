@@ -104,10 +104,6 @@ export function UserSettings() {
                     </SelectContent>
                 </Select>
             </div>
-             <div className="grid gap-2">
-                <Label htmlFor="password">New Password</Label>
-                <Input id="password" type="password" placeholder="Enter new password (optional)" />
-            </div>
         </div>
         <DialogFooter>
           <Button type="submit" onClick={handleSaveChanges}>Save changes</Button>
