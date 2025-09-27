@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { mockPerformanceData, mockDistributors, distributorCourses, mockTrainingCourses } from "@/lib/mock-data";
 import { BookOpen, Bot, Star, User } from "lucide-react";
@@ -6,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { placeholderImages } from "@/lib/placeholder-images";
+import { Badge } from "@/components/ui/badge";
 
 type DistributorPerf = {
   id: string;
@@ -32,6 +34,7 @@ export default function ReportsPage() {
       coursesCompleted: perfData ? perfData['courses-completed'] : 0,
       averageScore: perfData ? perfData['average-score'] : 0,
       overallProgress: Math.round(overallProgress),
+      assignedCourses: assignedCourses.map(c => c.title)
     }
   });
 
@@ -55,9 +58,10 @@ export default function ReportsPage() {
                 <TableHeader>
                     <TableRow>
                         <TableHead>Distributor</TableHead>
+                        <TableHead>Assigned Trainings</TableHead>
                         <TableHead>Courses Completed</TableHead>
                         <TableHead>Avg. Score</TableHead>
-                        <TableHead className="w-[20%]">Overall Progress</TableHead>
+                        <TableHead className="w-[15%]">Overall Progress</TableHead>
                         <TableHead>AI Performance Summary</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -71,6 +75,15 @@ export default function ReportsPage() {
                                         <AvatarFallback>{dist.name.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                     <span className="font-medium">{dist.name}</span>
+                                </div>
+                            </TableCell>
+                            <TableCell>
+                                <div className="flex flex-col gap-1">
+                                {dist.assignedCourses.length > 0 ? dist.assignedCourses.map(course => (
+                                    <Badge key={course} variant="secondary" className="w-fit">{course}</Badge>
+                                )) : (
+                                    <span className="text-xs text-muted-foreground">None</span>
+                                )}
                                 </div>
                             </TableCell>
                             <TableCell className="text-center">{dist.coursesCompleted}</TableCell>
