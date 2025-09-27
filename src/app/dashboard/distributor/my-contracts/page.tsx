@@ -1,31 +1,85 @@
 
+'use client';
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { mockApplicants, mockContracts } from "@/lib/mock-data";
-import { CheckCircle, FileText, Globe } from "lucide-react";
+import { CheckCircle, Globe, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { placeholderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { useEffect, useState } from "react";
+import { getApplicationsByDistributor, getContract, type Application } from "@/lib/firebase/firestore";
+import type { Contract } from "@/lib/types";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MyContractsPage() {
-  // In a real app, you'd get the current user's ID
-  const currentDistributorId = "dist_1"; // Simulating logged-in user Lakshan
-  
-  const myApprovedApps = mockApplicants.filter(
-    app => app.distributorId === currentDistributorId && app.status === "Approved"
-  );
-  
-  const myContractIds = myApprovedApps.map(app => app.contractId);
-  const myContracts = mockContracts.filter(contract => myContractIds.includes(contract.id));
+  const { user } = useAuth();
+  const [approvedContracts, setApprovedContracts] = useState<Contract[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const vendorLogo = placeholderImages.find(p => p.id === 'vendor-logo');
+
+  useEffect(() => {
+    const fetchApprovedContracts = async () => {
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+      try {
+        const myApplications = await getApplicationsByDistributor(user.uid);
+        const approvedApps = myApplications.filter(app => app.status === "Approved");
+        const contractIds = approvedApps.map(app => app.contractId);
+
+        const contractPromises = contractIds.map(id => getContract(id));
+        const contracts = await Promise.all(contractPromises);
+        
+        setApprovedContracts(contracts.filter(c => c !== null) as Contract[]);
+      } catch (error) {
+        console.error("Failed to fetch approved contracts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApprovedContracts();
+  }, [user]);
+
+  if (loading) {
+    return (
+        <div className="grid gap-4">
+            <div className="flex items-center">
+                <h1 className="text-lg font-semibold md:text-2xl font-headline">My Active Contracts</h1>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {[...Array(3)].map((_, i) => (
+                    <Card key={i}>
+                        <CardHeader>
+                            <Skeleton className="h-6 w-3/4" />
+                            <Skeleton className="h-4 w-1/2" />
+                        </CardHeader>
+                        <CardContent>
+                             <Skeleton className="h-4 w-full" />
+                             <Skeleton className="h-4 w-2/3 mt-2" />
+                        </CardContent>
+                        <CardFooter>
+                            <Skeleton className="h-10 w-full" />
+                        </CardFooter>
+                    </Card>
+                ))}
+            </div>
+        </div>
+    )
+  }
 
   return (
     <>
       <div className="flex items-center">
         <h1 className="text-lg font-semibold md:text-2xl font-headline">My Active Contracts</h1>
       </div>
-      {myContracts.length === 0 ? (
+      {approvedContracts.length === 0 ? (
         <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm min-h-[400px]">
           <div className="flex flex-col items-center gap-1 text-center">
             <h3 className="text-2xl font-bold tracking-tight font-headline">
@@ -41,7 +95,7 @@ export default function MyContractsPage() {
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {myContracts.map(contract => (
+          {approvedContracts.map(contract => (
             <Card key={contract.id} className="flex flex-col">
               <CardHeader>
                 <div className="flex items-start justify-between">

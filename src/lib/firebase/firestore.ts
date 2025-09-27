@@ -212,6 +212,16 @@ export async function getApplications(): Promise<Application[]> {
     } as Application));
 }
 
+export async function getApplicationsByDistributor(distributorId: string): Promise<Application[]> {
+    const q = query(collection(db, "applications"), where("distributorId", "==", distributorId));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    } as Application));
+}
+
+
 export async function getApplication(id: string): Promise<Application | null> {
     const docRef = doc(db, "applications", id);
     const docSnap = await getDoc(docRef);
