@@ -8,7 +8,7 @@ import { Menu, Sprout } from "lucide-react";
 import { useState } from "react";
 
 const Logo = () => (
-  <Link href="/" className="flex items-center gap-2 font-bold text-lg font-headline">
+  <Link href="/" className="flex items-center gap-2 font-bold text-lg font-headline hover:text-primary transition-colors">
     <Sprout className="h-6 w-6 text-primary" />
     SynergyChain
   </Link>
@@ -16,6 +16,13 @@ const Logo = () => (
 
 export default function Header() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  const handleLinkClick = () => {
+    // Add a small delay to allow the user to see the scroll before closing.
+    setTimeout(() => {
+        setIsSheetOpen(false);
+    }, 200);
+  };
 
   return (
     <header className="px-4 lg:px-6 h-14 flex items-center bg-card border-b">
@@ -49,16 +56,16 @@ export default function Header() {
             </SheetHeader>
             <div className="flex flex-col gap-4 p-4">
               <Logo />
-              <Link href="/#features" onClick={() => setIsSheetOpen(false)} className="text-sm font-medium hover:underline underline-offset-4">
+              <Link href="/#features" onClick={handleLinkClick} className="text-sm font-medium hover:underline underline-offset-4">
                 Features
               </Link>
-              <Link href="/dashboard" onClick={() => setIsSheetOpen(false)} className="text-sm font-medium hover:underline underline-offset-4">
+              <Link href="/dashboard" onClick={handleLinkClick} className="text-sm font-medium hover:underline underline-offset-4">
                   Dashboard
               </Link>
-              <Link href="/auth/login" onClick={() => setIsSheetOpen(false)} className="text-sm font-medium hover:underline underline-offset-4">
+              <Link href="/auth/login" onClick={handleLinkClick} className="text-sm font-medium hover:underline underline-offset-4">
                 Login
               </Link>
-              <Link href="/auth/signup/distributor" onClick={() => setIsSheetOpen(false)}>
+              <Link href="/auth/signup/distributor" onClick={handleLinkClick}>
                 <Button className="w-full">Get Started</Button>
               </Link>
             </div>
