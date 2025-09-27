@@ -177,7 +177,7 @@ export const mockApplicants = [
     {
         id: "app_1",
         distributorId: "dist_1",
-        distributorName: "John Doe",
+        distributorName: "Lakshan",
         contractId: "cont_1",
         contractTitle: "North America Distribution Agreement for Z-Phone",
         status: "Approved",
@@ -189,7 +189,7 @@ export const mockApplicants = [
     {
         id: "app_2",
         distributorId: "dist_3",
-        distributorName: "Kenji Tanaka",
+        distributorName: "Karthk",
         contractId: "cont_1",
         contractTitle: "North America Distribution Agreement for Z-Phone",
         status: "Pending",
@@ -201,7 +201,7 @@ export const mockApplicants = [
     {
         id: "app_3",
         distributorId: "dist_4",
-        distributorName: "Maria Garcia",
+        distributorName: "Praneeth",
         contractId: "cont_2",
         contractTitle: "Exclusive EU Contract for InnovateHub Software",
         status: "Approved",
@@ -213,7 +213,7 @@ export const mockApplicants = [
     {
         id: "app_4",
         distributorId: "dist_2",
-        distributorName: "Jane Smith",
+        distributorName: "Hari",
         contractId: "cont_2",
         contractTitle: "Exclusive EU Contract for InnovateHub Software",
         status: "Pending",
