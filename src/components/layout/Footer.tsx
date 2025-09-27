@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { Sprout } from "lucide-react";
 
@@ -9,10 +10,10 @@ export default function Footer() {
         <p className="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} SynergyChain. All rights reserved.</p>
       </div>
       <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-        <Link href="#" className="text-xs hover:underline underline-offset-4">
+        <Link href="/terms" className="text-xs hover:underline underline-offset-4">
           Terms of Service
         </Link>
-        <Link href="#" className="text-xs hover:underline underline-offset-4">
+        <Link href="/privacy" className="text-xs hover:underline underline-offset-4">
           Privacy
         </Link>
       </nav>

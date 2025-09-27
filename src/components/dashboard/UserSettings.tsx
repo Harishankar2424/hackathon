@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState } from "react";
@@ -101,9 +102,9 @@ export function UserSettings() {
                     <div className="text-sm text-muted-foreground rounded-lg border p-4">
                        <p>For more information about your rights and responsibilities, please review our legal documents.</p>
                        <div className="mt-2">
-                         <Link href="#" className="text-primary underline underline-offset-4">Terms of Service</Link>
+                         <Link href="/terms" className="text-primary underline underline-offset-4">Terms of Service</Link>
                          <span className="mx-2 text-border">|</span>
-                         <Link href="#" className="text-primary underline underline-offset-4">Privacy Policy</Link>
+                         <Link href="/privacy" className="text-primary underline underline-offset-4">Privacy Policy</Link>
                        </div>
                     </div>
                 </div>
